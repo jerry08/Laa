@@ -1,0 +1,18 @@
+﻿<mah:MetroWindow x:Class="LaaServer.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:local="clr-namespace:LaaServer"
+                 mc:Ignorable="d"
+                 WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+                 TitleCharacterCasing="Normal" WindowTitleBrush="Transparent"
+                 Icon="/LaaServer;component/cherry_icon.ico"
+                 Title="Laa Server" Height="300" Width="500">
+    <DockPanel>
+        <Frame x:Name="_mainFrame" HorizontalAlignment="Stretch"
+			   VerticalAlignment="Stretch" NavigationUIVisibility="Hidden" HorizontalContentAlignment="Stretch" 
+			   VerticalContentAlignment="Stretch" />
+    </DockPanel>
+</mah:MetroWindow>

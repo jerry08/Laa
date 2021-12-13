@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:LaaSender"
+             xmlns:sh="clr-namespace:LaaSender.Helpers"
+             x:Class="LaaSender.Views.BluetoothPage">
+    <sh:MaterialFrame
+        Style="{StaticResource DefaultFrame}"
+        StyleClass="blur"
+        UwpHostBackdropBlur="True"
+        macOSBehindWindowBlur="True">
+        <Grid>
+            <Grid.Background>
+                <SolidColorBrush Color="{AppThemeBinding Dark=#77000000, Light=#77ffffff}" />
+            </Grid.Background>
+            <StackLayout Padding="20,80,20,0" Orientation="Vertical" Spacing="15">
+                <StackLayout Orientation="Horizontal">
+                    <Switch x:Name="ShowTextSwitch" />
+                    <Label Text="Show all text?" TextColor="Accent" />
+                </StackLayout>
+                <!--<Entry x:Name="KeyboardEntry" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" />-->
+                <!--<local:OTPCustomEntry x:Name="KeyboardEntry" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" VerticalTextAlignment="Start" />-->
+                <!--<Entry x:Name="AllTxt" IsEnabled="False" VerticalTextAlignment="Start" HeightRequest="100" TextColor="Accent" BackgroundColor="Transparent" />-->
+                <Label x:Name="AllTxt" 
+                       VerticalTextAlignment="Start" 
+                       HeightRequest="100" 
+                       TextColor="Accent" />
+                <local:OTPCustomEntry x:Name="KeyboardEntry" 
+                                      VerticalTextAlignment="Start" 
+                                      TextColor="Accent" 
+                                      BackgroundColor="Transparent"  />
+                <!--<Button x:Name="ShowKeyboardButton" Text="Show Keyboard" FontSize="24" HorizontalOptions="FillAndExpand" Clicked="ShowKeyboardButton_Clicked" />-->
+            </StackLayout>
+        </Grid>
+    </sh:MaterialFrame>
+</ContentPage>

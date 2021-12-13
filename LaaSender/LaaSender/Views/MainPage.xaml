@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:LaaSender"
+             xmlns:sh="clr-namespace:LaaSender.Helpers"
+             x:Class="LaaSender.Views.MainPage">
+    <sh:MaterialFrame
+        Style="{StaticResource DefaultFrame}"
+        StyleClass="blur"
+        UwpHostBackdropBlur="True"
+        macOSBehindWindowBlur="True">
+        <Grid>
+            <Grid.Background>
+                <SolidColorBrush Color="{AppThemeBinding Dark=#77000000, Light=#77ffffff}" />
+            </Grid.Background>
+            <StackLayout VerticalOptions="Center">
+                <Button x:Name="BluetoothButton" 
+                        Text="Bluetooth" 
+                        FontSize="24" 
+                        HorizontalOptions="FillAndExpand" 
+                        VerticalOptions="Center" 
+                        Clicked="BluetoothButton_Clicked"
+                        TextColor="Accent" 
+                        BackgroundColor="Transparent" />
+                <Button x:Name="WifiButton" 
+                        Text="Wifi" 
+                        FontSize="24" 
+                        HorizontalOptions="FillAndExpand" 
+                        VerticalOptions="Center" 
+                        Clicked="WifiButton_Clicked"
+                        TextColor="Accent" 
+                        BackgroundColor="Transparent" />
+            </StackLayout>
+        </Grid>
+    </sh:MaterialFrame>
+</ContentPage>
