@@ -23,22 +23,6 @@ namespace LaaSender.Views
 
             InitializeComponent();
 
-            //var pages = App.Current.MainPage.Navigation
-            //    .NavigationStack.ToList();
-            //
-            //for (int i = 0; i < pages.Count; i++)
-            //{
-            //    App.Current.MainPage.Navigation.RemovePage(pages[i]);
-            //}
-
-            //KeyboardEntry.IsVisible = false;
-            //ShowKeyboardButton.Text = "Show Keyboard";
-            //
-            //KeyboardEntry.Unfocused += (s, e) =>
-            //{
-            //    HideKeyboard();
-            //};
-
             KeyboardEntry.TextChanged += (s, e) =>
             {
                 if (!string.IsNullOrEmpty(e.NewTextValue))
@@ -78,36 +62,13 @@ namespace LaaSender.Views
 
                 _service.Send("backspace" + LaaConstants.FirstBkHash);
                 _service.Send("backspace" + LaaConstants.SecondBkHash);
-
-                //_service.Send("backspace");
-                //Client?.Send("backspace");
             };
         }
 
-        /*private void ShowKeyboardButton_Clicked(object sender, EventArgs e)
+        protected override bool OnBackButtonPressed()
         {
-            if (KeyboardEntry.IsFocused)
-            {
-                HideKeyboard();
-            }
-            else
-            {
-                ShowKeyboard();
-            }
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
+            return false;
         }
-
-        void HideKeyboard()
-        {
-            ShowKeyboardButton.Text = "Show Keyboard";
-            KeyboardEntry.Unfocus();
-            KeyboardEntry.IsVisible = false;
-        }
-
-        void ShowKeyboard()
-        {
-            ShowKeyboardButton.Text = "Hide Keyboard";
-            KeyboardEntry.IsVisible = true;
-            KeyboardEntry.Focus();
-        }*/
     }
 }

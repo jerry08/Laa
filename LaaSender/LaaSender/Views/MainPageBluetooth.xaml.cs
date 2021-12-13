@@ -82,5 +82,11 @@ namespace LaaSender.Views
                 await DisplayAlert("ERROR", ex.Message, "OK");
             }
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
+            return false;
+        }
     }
 }

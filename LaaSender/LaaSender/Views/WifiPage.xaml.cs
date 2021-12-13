@@ -90,5 +90,14 @@ namespace LaaSender.Views
             //udpSender = new UdpClient();
             //udpSender.Connect(ReceiverAudioAddress);
         }
+
+        //protected override bool OnBackButtonPressed() => false;
+        protected override bool OnBackButtonPressed() 
+        {
+            //See reference: https://stackoverflow.com/a/49282833
+            //System.Diagnostics.Process.GetCurrentProcess().CloseMainWindow();
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
+            return false;
+        }
     }
 }

@@ -23,5 +23,11 @@ namespace LaaSender.Views
             await App.Current.MainPage.Navigation.PushAsync(new NavigationPage(new WifiPage()), false);
             //App.Current.MainPage.Navigation.RemovePage(this);
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
+            return false;
+        }
     }
 }
