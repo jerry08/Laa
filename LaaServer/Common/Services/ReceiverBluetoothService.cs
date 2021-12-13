@@ -26,64 +26,7 @@ namespace LaaServer.Common.Services
         /// </summary>
         public ReceiverBluetoothService()
         {
-            BluetoothClient client = new BluetoothClient();
-            //List<string> items = new List<string>();
-            //var devices = client.DiscoverDevices().ToList();
-            var pairedDevices = client.PairedDevices.ToList();
-            //BluetoothDeviceInfo[] devices = client.DiscoverDevicesInRange();
-            //foreach (BluetoothDeviceInfo d in devices)
-            //{
-            //    items.Add(d.DeviceName);
-            //}
-
-            //var g = pairedDevices[2].InstalledServices.Where(x => x.ToString() == "00001101-0000-1000-8000-00805f9b34fb");
-
-            //var test = InTheHand.Net.Bluetooth.BluetoothService.;
             _serviceClassId = new Guid("00001101-0000-1000-8000-00805f9b34fb");
-
-
-            //var pick = new BluetoothDevicePicker();
-            //pick.PickSingleDeviceAsync().ContinueWith(task =>
-            //{
-            //    var dev = task.Result;
-            //    //Debug.Log(dev.DeviceName);
-            //});
-
-
-            /*var devices = client.DiscoverDevices().ToList();
-            var device = devices.FirstOrDefault();
-
-            device = pairedDevices[1];
-
-            if (device != null)
-            {
-                Console.Out.WriteLine("Found Device!");
-                Console.Out.WriteLine("    Name: " + device.DeviceName);
-                Console.Out.WriteLine("    Address: " + device.DeviceAddress);
-                Console.Out.WriteLine("    Authenticated: " + device.Authenticated);
-                Console.Out.WriteLine("    Connected: " + device.Connected);
-                Console.Out.WriteLine("    HID: " + device.InstalledServices.Contains(BluetoothService.HumanInterfaceDevice));
-
-                try
-                {
-                    Console.Out.WriteLine("Enabling Service...");
-                    device.SetServiceState(BluetoothService.HumanInterfaceDevice, true);
-                    Console.Out.WriteLine("Connecting...");
-                    client.Connect(device.DeviceAddress, BluetoothService.HumanInterfaceDevice); // Program.cs:line 36
-                    Console.Out.WriteLine("Connected!");
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Failed to connect.");
-                    Console.Out.WriteLine(e);
-                }
-
-                var stream = client.GetStream();
-
-                // ...
-
-                Console.ReadLine();
-            }*/
         }
 
         /// <summary>
