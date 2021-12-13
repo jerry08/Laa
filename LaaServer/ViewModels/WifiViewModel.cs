@@ -129,8 +129,9 @@ namespace LaaServer.ViewModels
         {
             App.IsExit = true;
             Stop();
-            Process currentProcess = Process.GetCurrentProcess();
-            List<Process> processes = Process.GetProcesses().Where(x => x.ProcessName == currentProcess.ProcessName).ToList();
+            var currentProcess = Process.GetCurrentProcess();
+            List<Process> processes = Process.GetProcesses()
+                .Where(x => x.ProcessName == currentProcess.ProcessName).ToList();
             processes.ForEach(x => x.Kill());
         }
 

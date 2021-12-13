@@ -133,9 +133,11 @@ namespace LaaServer.ViewModels
 
         private void ShutDown()
         {
+            App.IsExit = true;
             Stop();
-            Process currentProcess = Process.GetCurrentProcess();
-            List<Process> processes = Process.GetProcesses().Where(x => x.ProcessName == currentProcess.ProcessName).ToList();
+            var currentProcess = Process.GetCurrentProcess();
+            List<Process> processes = Process.GetProcesses()
+                .Where(x => x.ProcessName == currentProcess.ProcessName).ToList();
             processes.ForEach(x => x.Kill());
         }
 
@@ -206,7 +208,7 @@ namespace LaaServer.ViewModels
 
             DeviceName = BluetoothRadio.Default.Name;
 
-            BluetoothClient client = new BluetoothClient();
+            var client = new BluetoothClient();
             var pairedDevices = client.PairedDevices.ToList();
 
             if (pairedDevices.Count <= 0)
