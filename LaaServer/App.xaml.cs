@@ -60,13 +60,6 @@ namespace LaaServer
             {
                 //app is already running! Exiting the application
 
-                //Process currentProcess = Process.GetCurrentProcess();
-                //Process process = Process.GetProcesses().Where(x => x.ProcessName == currentProcess.ProcessName && x.Id != currentProcess.Id).FirstOrDefault();
-                //
-                //var hWnd = process.MainWindowHandle.ToInt32();
-                //WindowHelper.ShowWindow(hWnd, WindowHelper.SW_SHOW);
-                //WindowHelper.BringProcessToFront(process);
-
                 FocusProgram.Set();
 
                 Application.Current.Shutdown();
@@ -95,7 +88,6 @@ namespace LaaServer
 
             CreateContextMenu();
             ShowMainWindow();
-            //SetSelfStarting(true, "test12.exe");
         }
 
         private void CreateContextMenu()
@@ -166,63 +158,6 @@ namespace LaaServer
                 WriteLog(e);
         }
 
-        /*public void SingleInstance()
-        {
-            Process currentProcess = Process.GetCurrentProcess();
-            if (Process.GetProcesses().Count(p => p.ProcessName == currentProcess.ProcessName) > 1)
-            {
-                Process process = Process.GetProcesses().Where(x => x.ProcessName == currentProcess.ProcessName && x.Id != currentProcess.Id).FirstOrDefault();
-                List<Process> processes = Process.GetProcesses().Where(x => x.ProcessName == currentProcess.ProcessName && x.Id != currentProcess.Id).ToList();
-
-                try
-                {
-                    if (IsAdministrator())
-                    {
-                        processes.ForEach(x => x.Kill());
-
-                        return;
-                    }
-                }
-                catch
-                {
-
-                }
-
-                if (Settings.Default.IsProcessClosing)
-                {
-                    try
-                    {
-                        process.WaitForExit(15);
-                    }
-                    catch
-                    {
-                        WindowHelper.BringProcessToFront(process);
-                        currentProcess.Kill();
-                    }
-                }
-                else
-                {
-                    WindowHelper.BringProcessToFront(process);
-                    currentProcess.Kill();
-                    return;
-                }
-
-                if (processes.Count == 1)
-                {
-                    currentProcess.Kill();
-                    return;
-                }
-
-                if (processes.Count > 0)
-                {
-                    foreach (var proc in processes)
-                    {
-                        proc.Kill();
-                    }
-                }
-            }
-        }*/
-
         public static void RestartAsAdmin()
         {
             // Restart and run as admin
@@ -251,277 +186,46 @@ namespace LaaServer
             return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
-        /// <summary> 
-        ///Automatically start on boot
-        /// </summary> 
-        /// <param name="started"> Set boot up, or cancel boot up </param> 
-        /// <param name="exeName"> the name in the registry </param> 
-        /// <returns> whether the activation or deactivation is successful </returns> 
-        public bool SetSelfStarting(bool started, string exeName)
-        {
-            RegistryKey key = null;
-            try
-            {
-                string exeDir = System.Windows.Forms.Application.ExecutablePath;
-                RegistryKey HKLM = Registry.CurrentUser;
-                key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true); //Open the registry subkey
-                key = Registry.CurrentUser.OpenSubKey(" SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run ", true); //Open the registry subkey
-
-                if (key == null) //If the item does not exist, create the sub item
-                {
-                    key = Registry.LocalMachine.CreateSubKey(" SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run ");
-                }
-
-                if (started)
-                {
-                    try
-                    {
-                        object ob = key.GetValue(exeName, -1);
-
-                        if (!ob.ToString().Equals(exeDir))
-                        {
-                            if (!ob.ToString().Equals(" -1 "))
-                            {
-                                key.DeleteValue(exeName); //Cancel startup
-                            }
-                            key.SetValue(exeName, exeDir); //Set to boot
-                        }
-                        key.Close();
-
-                    }
-                    catch (Exception ex)
-                    {
-                        WriteLog(ex);
-                        return false;
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        key.DeleteValue(exeName); //Cancel startup
-                        key.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        WriteLog(ex);
-                        return false;
-                    }
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                WriteLog(ex);
-                if (key != null)
-                {
-                    key.Close();
-                }
-                return false;
-            }
-        }
-
         private void WriteLog(object exception)
         {
-            Exception ex = exception as Exception;
-
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), "ErrorLog.txt");
 
-            using (FileStream fs = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            try
             {
-                fs.Seek(0, SeekOrigin.End);
-                byte[] buffer = Encoding.Default.GetBytes(" --------------------------- ----------------------------\r\n ");
-                fs.Write(buffer, 0, buffer.Length);
-
-                buffer = Encoding.Default.GetBytes(DateTime.Now.ToString() + " \r\n ");
-                fs.Write(buffer, 0, buffer.Length);
-
-                if (ex != null)
+                using (FileStream fs = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
                 {
-                    buffer = Encoding.Default.GetBytes(" Member name: " + ex.TargetSite + " \r\n ");
+                    fs.Seek(0, SeekOrigin.End);
+                    byte[] buffer = Encoding.Default.GetBytes(" --------------------------- ----------------------------\r\n ");
                     fs.Write(buffer, 0, buffer.Length);
 
-                    buffer = Encoding.Default.GetBytes(" The class that caused the exception: " + ex.TargetSite.DeclaringType + " \r\n ");
+                    buffer = Encoding.Default.GetBytes(DateTime.Now.ToString() + " \r\n ");
                     fs.Write(buffer, 0, buffer.Length);
 
-                    buffer = Encoding.Default.GetBytes(" Exception information: " + ex.Message + " \r\n ");
-                    fs.Write(buffer, 0, buffer.Length);
+                    if (exception is Exception ex)
+                    {
+                        buffer = Encoding.Default.GetBytes(" Member name: " + ex.TargetSite + " \r\n ");
+                        fs.Write(buffer, 0, buffer.Length);
 
-                    buffer = Encoding.Default.GetBytes(" The assembly or object that caused the exception: " + ex.Source + " \r\n ");
-                    fs.Write(buffer, 0, buffer.Length);
+                        buffer = Encoding.Default.GetBytes(" The class that caused the exception: " + ex.TargetSite.DeclaringType + " \r\n ");
+                        fs.Write(buffer, 0, buffer.Length);
 
-                    buffer = Encoding.Default.GetBytes(" Stack: " + ex.StackTrace + " \r\n ");
-                    fs.Write(buffer, 0, buffer.Length);
-                }
-                else
-                {
-                    buffer = Encoding.Default.GetBytes(" Application error: " + exception.ToString() + " \r\n ");
-                    fs.Write(buffer, 0, buffer.Length);
+                        buffer = Encoding.Default.GetBytes(" Exception information: " + ex.Message + " \r\n ");
+                        fs.Write(buffer, 0, buffer.Length);
+
+                        buffer = Encoding.Default.GetBytes(" The assembly or object that caused the exception: " + ex.Source + " \r\n ");
+                        fs.Write(buffer, 0, buffer.Length);
+
+                        buffer = Encoding.Default.GetBytes(" Stack: " + ex.StackTrace + " \r\n ");
+                        fs.Write(buffer, 0, buffer.Length);
+                    }
+                    else
+                    {
+                        buffer = Encoding.Default.GetBytes(" Application error: " + exception.ToString() + " \r\n ");
+                        fs.Write(buffer, 0, buffer.Length);
+                    }
                 }
             }
+            catch { }
         }
     }
-
-
-    /*public partial class App2 : Application
-    {
-        Mutex mutex;
-        public App2()
-        {
-            this.Startup += new StartupEventHandler(App_Startup);
-            this.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(Application_DispatcherUnhandledException);
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-        }
-        private void App_Startup(object sender, StartupEventArgs e)
-        {
-            bool ret;
-            mutex = new System.Threading.Mutex(true, " TestEXEName ", out ret);
-
-            if (!ret)
-            {
-                MessageBox.Show(" There is already a client running, please end the original client first! ");
-                Environment.Exit(0);
-            }
-            #region Set the program to run automatically when booting (+ registry key)
-            try
-            {
-                SetSelfStarting(true, " TestEXEName.exe ");
-            }
-            catch (Exception ex)
-            {
-                WriteLog(ex);
-            }
-
-            #endregion
-
-        }
-        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            if (e.ExceptionObject is Exception)
-                WriteLog(e.ExceptionObject);
-            else
-                WriteLog(e);
-        }
-
-        private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
-            if (e.Exception is Exception)
-                WriteLog(e.Exception);
-            else
-                WriteLog(e);
-        }
-
-        #region Registry self-startup
-
-
-        /// <summary> 
-        ///Automatically start on boot
-        /// </summary> 
-        /// <param name="started"> Set boot up, or cancel boot up </param> 
-        /// <param name=" exeName"> the name in the registry </param> 
-        /// <returns> whether the activation or deactivation is successful </returns> 
-        public bool SetSelfStarting(bool started, string exeName)
-        {
-            RegistryKey key = null;
-            try
-            {
-
-                string exeDir = System.Windows.Forms.Application.ExecutablePath;
-                RegistryKey HKLM = Registry.CurrentUser;
-                key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true); //Open the registry subkey
-                key = Registry.CurrentUser.OpenSubKey(" SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run ", true); //Open the registry subkey
-
-                if (key == null) //If the item does not exist, create the sub item
-                {
-                    key = Registry.LocalMachine.CreateSubKey(" SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run ");
-                }
-                if (started)
-                {
-                    try
-                    {
-                        object ob = key.GetValue(exeName, -1);
-
-                        if (!ob.ToString().Equals(exeDir))
-                        {
-                            if (!ob.ToString().Equals(" -1 "))
-                            {
-                                key.DeleteValue(exeName); //Cancel startup
-                            }
-                            key.SetValue(exeName, exeDir); //Set to boot
-                        }
-                        key.Close();
-
-                    }
-                    catch (Exception ex)
-                    {
-                        WriteLog(ex);
-                        return false;
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        key.DeleteValue(exeName); //Cancel startup
-                        key.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        WriteLog(ex);
-                        return false;
-                    }
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                WriteLog(ex);
-                if (key != null)
-                {
-                    key.Close();
-                }
-                return false;
-            }
-        }
-
-        #endregion
-
-        private void WriteLog(object exception)
-        {
-            Exception ex = exception as Exception;
-
-            using (FileStream fs = File.Open(" .//ErrorLog.txt ", FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            {
-                fs.Seek(0, SeekOrigin.End);
-                byte[] buffer = Encoding.Default.GetBytes(" --------------------------- ----------------------------\r\n ");
-                fs.Write(buffer, 0, buffer.Length);
-
-                buffer = Encoding.Default.GetBytes(DateTime.Now.ToString() + " \r\n ");
-                fs.Write(buffer, 0, buffer.Length);
-
-                if (ex != null)
-                {
-                    buffer = Encoding.Default.GetBytes(" Member name: " + ex.TargetSite + " \r\n ");
-                    fs.Write(buffer, 0, buffer.Length);
-
-                    buffer = Encoding.Default.GetBytes(" The class that caused the exception: " + ex.TargetSite.DeclaringType + " \r\n ");
-                    fs.Write(buffer, 0, buffer.Length);
-
-                    buffer = Encoding.Default.GetBytes(" Exception information: " + ex.Message + " \r\n ");
-                    fs.Write(buffer, 0, buffer.Length);
-
-                    buffer = Encoding.Default.GetBytes(" The assembly or object that caused the exception: " + ex.Source + " \r\n ");
-                    fs.Write(buffer, 0, buffer.Length);
-
-                    buffer = Encoding.Default.GetBytes(" Stack: " + ex.StackTrace + " \r\n ");
-                    fs.Write(buffer, 0, buffer.Length);
-                }
-                else
-                {
-                    buffer = Encoding.Default.GetBytes(" Application error: " + exception.ToString() + " \r\n ");
-                    fs.Write(buffer, 0, buffer.Length);
-                }
-            }
-        }
-    }*/
 }

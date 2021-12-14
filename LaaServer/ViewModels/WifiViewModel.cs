@@ -210,7 +210,7 @@ namespace LaaServer.ViewModels
 #if DEBUG
                     throw new Exception("The firewall port (9091) must be opened. Please restart this app as Administrator.");
 #else
-                    if (!IsAdministrator())
+                    if (!App.IsAdministrator())
                     {
                         MessageBox.Show("The firewall port (9091) must be opened. The app will restart as Admin", "Laa", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                         App.RestartAsAdmin();

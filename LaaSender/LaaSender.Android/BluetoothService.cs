@@ -319,7 +319,7 @@ namespace LaaSender.Droid
             return;*/
 
             BluetoothDevice device = null;
-            BluetoothAdapter adapter = BluetoothAdapter.DefaultAdapter;
+            BluetoothAdapter adapter;
             BluetoothSocket bthSocket = null;
             //BluetoothServerSocket bthServerSocket = null;
 
