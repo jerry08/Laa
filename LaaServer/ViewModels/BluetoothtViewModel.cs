@@ -247,6 +247,9 @@ namespace LaaServer.ViewModels
         {
             App.IsExit = true;
 
+            DeviceName = "";
+            this.OnPropertyChanged(null);
+
             if (BluetoothService != null)
             {
                 BluetoothService.Stop();

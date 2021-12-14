@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using LaaServer.Utils;
+using LaaServer.ViewModels;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,40 +16,34 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace LaaServer
 {
+    public partial class App
+    {
+        private static Assembly Assembly { get; } = typeof(App).Assembly;
+
+        public static string Name { get; } = Assembly.GetName().Name!;
+
+        public static Version Version { get; } = Assembly.GetName().Version!;
+
+        public static string VersionString { get; } = Version.ToString(3);
+
+        public static string GitHubProjectUrl { get; } = "https://github.com/Code-08/SoundCloudDownloader";
+    }
+
     public partial class App : Application
     {
-        private System.Windows.Forms.NotifyIcon _notifyIcon;
-        public static bool IsExit;
-
         public const string AppName = "LaaServer";
         private static Mutex _mutex = null;
-
-        EventWaitHandle ProgramOpen = new EventWaitHandle(false, EventResetMode.ManualReset, "ProgramOpen198472");
-        EventWaitHandle FocusProgram = new EventWaitHandle(false, EventResetMode.ManualReset, "FocusMyProgram198472");
-        private delegate void focusConfirmed();
-        Thread FocusCheck;
-
-        private void focus()
-        {
-            FocusProgram.WaitOne();
-            if (!IsExit)
-            {
-                App.Current.Dispatcher.Invoke(new focusConfirmed(() =>
-                {
-                    ShowMainWindow();
-                }));
-            }
-        }
 
         public App()
         {
             //this.Startup += new StartupEventHandler(App_Startup);
-            this.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(Application_DispatcherUnhandledException);
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+            //DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(Application_DispatcherUnhandledException);
+            //AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -62,13 +58,19 @@ namespace LaaServer
 
                 FocusProgram.Set();
 
-                Application.Current.Shutdown();
+                Current.Shutdown();
                 return;
             }
 
-            App.IsExit = true;
+            // Set default theme
+            // (preferred theme will be chosen later, once the settings are loaded)
+            App.SetLightTheme();
 
-            MainWindow = new MainWindow();
+            Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+
+            IsExit = true;
+
+            MainWindow = new RootView();
             MainWindow.Closing += MainWindow_Closing;
             MainWindow.Loaded += (s, e) =>
             {
@@ -83,11 +85,63 @@ namespace LaaServer
             _notifyIcon = new System.Windows.Forms.NotifyIcon();
             _notifyIcon.DoubleClick += (s, args) => ShowMainWindow();
             //_notifyIcon.Icon = BackgroundApplication.Properties.Resources.MyIcon;
-            _notifyIcon.Icon = new Icon(App.GetResourceStream(new Uri("pack://application:,,,/cherry_icon.ico")).Stream);
+            _notifyIcon.Icon = new System.Drawing.Icon(App.GetResourceStream(new Uri("pack://application:,,,/cherry_icon.ico")).Stream);
             _notifyIcon.Visible = true;
 
             CreateContextMenu();
             ShowMainWindow();
+        }
+
+        private static Theme LightTheme { get; } = Theme.Create(
+            new MaterialDesignLightTheme(),
+            MediaColor.FromHex("#343838"),
+            MediaColor.FromHex("#F9A825")
+        );
+
+        private static Theme DarkTheme { get; } = Theme.Create(
+            new MaterialDesignDarkTheme(),
+            MediaColor.FromHex("#E8E8E8"),
+            MediaColor.FromHex("#F9A825")
+        );
+
+        public static void SetLightTheme()
+        {
+            var paletteHelper = new PaletteHelper();
+            paletteHelper.SetTheme(LightTheme);
+
+            Current.Resources["SuccessBrush"] = new SolidColorBrush(Colors.DarkGreen);
+            Current.Resources["CanceledBrush"] = new SolidColorBrush(Colors.DarkOrange);
+            Current.Resources["FailedBrush"] = new SolidColorBrush(Colors.DarkRed);
+        }
+
+        public static void SetDarkTheme()
+        {
+            var paletteHelper = new PaletteHelper();
+            paletteHelper.SetTheme(DarkTheme);
+
+            Current.Resources["SuccessBrush"] = new SolidColorBrush(Colors.LightGreen);
+            Current.Resources["CanceledBrush"] = new SolidColorBrush(Colors.Orange);
+            Current.Resources["FailedBrush"] = new SolidColorBrush(Colors.OrangeRed);
+        }
+
+        private System.Windows.Forms.NotifyIcon _notifyIcon;
+        public static bool IsExit { get; set; }
+
+        EventWaitHandle ProgramOpen = new EventWaitHandle(false, EventResetMode.ManualReset, "ProgramOpen198472");
+        EventWaitHandle FocusProgram = new EventWaitHandle(false, EventResetMode.ManualReset, "FocusMyProgram198472");
+        private delegate void focusConfirmed();
+        Thread FocusCheck;
+
+        private void Focus()
+        {
+            FocusProgram.WaitOne();
+            if (!IsExit)
+            {
+                App.Current.Dispatcher.Invoke(new focusConfirmed(() =>
+                {
+                    ShowMainWindow();
+                }));
+            }
         }
 
         private void CreateContextMenu()
@@ -132,30 +186,35 @@ namespace LaaServer
                 MainWindow.Hide(); // A hidden window can be shown again, a closed one not
 
                 FocusProgram.Reset();
-                FocusCheck = new Thread(focus);
+                FocusCheck = new Thread(Focus);
                 FocusCheck.Start();
             }
             else
             {
                 FocusProgram.Set();
                 ProgramOpen.Reset();
+                (App.Current.MainWindow.DataContext as RootViewModel).OnClose();
             }
         }
 
-        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            if (e.ExceptionObject is Exception)
-                WriteLog(e.ExceptionObject);
-            else
-                WriteLog(e);
-        }
+        //private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        //{
+        //    if (e.ExceptionObject is Exception)
+        //        WriteLog(e.ExceptionObject);
+        //    else
+        //        WriteLog(e);
+        //}
 
-        private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        private void Current_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
+            e.Handled = true;
+
             if (e.Exception is Exception)
                 WriteLog(e.Exception);
             else
                 WriteLog(e);
+
+            MessageBox.Show(e.Exception.GetBaseException().Message, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public static void RestartAsAdmin()
