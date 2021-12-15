@@ -18,6 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace LaaServer
@@ -32,13 +33,15 @@ namespace LaaServer
 
         public static string VersionString { get; } = Version.ToString(3);
 
-        public static string GitHubProjectUrl { get; } = "https://github.com/Code-08/SoundCloudDownloader";
+        public static string GitHubProjectUrl { get; } = "https://github.com/jerry08/Laa";
     }
 
     public partial class App : Application
     {
         public const string AppName = "LaaServer";
         private static Mutex _mutex = null;
+
+        public static NavigationService NavigationService;
 
         public App()
         {
@@ -77,7 +80,12 @@ namespace LaaServer
                     Application.Current.Shutdown();
                 }
                 ProgramOpen.Set();
+
+                //MainWindow.Activate();
+                //MainWindow.WindowState = WindowState.Normal;
             };
+
+            NavigationService = (MainWindow as RootView)._mainFrame.NavigationService;
 
             _notifyIcon = new System.Windows.Forms.NotifyIcon();
             _notifyIcon.DoubleClick += (s, args) => ShowMainWindow();

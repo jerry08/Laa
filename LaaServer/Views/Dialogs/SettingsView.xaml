@@ -26,7 +26,7 @@
                     <Run Text="Perform automatic updates on every launch" />
                     <LineBreak />
                     <Run FontWeight="SemiBold" Text="Warning:" />
-                    <Run Text="disabling this is NOT recommended because the application will stop working when integration with SoundCloud inevitably breaks in the future" />
+                    <Run Text="Disabling this is NOT recommended" />
                 </TextBlock>
             </DockPanel.ToolTip>
             <TextBlock

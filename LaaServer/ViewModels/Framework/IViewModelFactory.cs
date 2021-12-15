@@ -8,5 +8,9 @@ namespace LaaServer.ViewModels.Framework
         MessageBoxViewModel CreateMessageBoxViewModel();
 
         SettingsViewModel CreateSettingsViewModel();
+
+        BluetoothViewModel CreateBluetoothViewModel();
+
+        WifiViewModel CreateWifiViewModel();
     }
 }

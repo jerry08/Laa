@@ -10,12 +10,14 @@
       Style="{DynamicResource MaterialDesignPageRoot}"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Main Page">
+    <!--DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=Window}}"-->
     <Grid>
         <StackPanel Width="370" Orientation="Vertical" VerticalAlignment="Center">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                <Button Content="Bluetooth" Width="140" Margin="0,0,0,10" Click="BthButton_Click" />
-                <Button Content="Wifi" Width="140" Margin="0,0,0,10" Click="WifiButton_Click" />
-                <Button Content="Settings" Width="140" Click="SettingsButton_Click" />
+                <!--<Button Content="Bluetooth" Width="140" Margin="0,0,0,10" Command="{Binding DataContext.BthButtonCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />-->
+                <Button Content="Bluetooth" Width="140" Margin="0,0,0,10" Command="{Binding Source={x:Static Application.Current}, Path=MainWindow.DataContext.BthButtonCommand}" />
+                <Button Content="Wifi" Width="140" Margin="0,0,0,10" Command="{Binding Source={x:Static Application.Current}, Path=MainWindow.DataContext.WifiButtonCommand}" />
+                <Button Content="Settings" Width="140" Command="{Binding Source={x:Static Application.Current}, Path=MainWindow.DataContext.ShowSettingsCommand}" />
             </StackPanel>
         </StackPanel>
     </Grid>

@@ -17,11 +17,16 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using LaaServer.Common.Services;
 using Laa.Shared;
+using LaaServer.ViewModels.Framework;
+using LaaServer.ViewModels.Dialogs;
 
 namespace LaaServer.ViewModels
 {
     public class WifiViewModel : PropertyChangedBase
     {
+        private readonly IViewModelFactory _viewModelFactory;
+        private readonly DialogManager _dialogManager;
+
         public string IpAddress { get; private set; }
 
         public bool IsRunning { get { return Server != null; } }
@@ -106,9 +111,12 @@ namespace LaaServer.ViewModels
         }
         #endregion
 
-        public WifiViewModel()
+        public WifiViewModel(
+            IViewModelFactory viewModelFactory,
+            DialogManager dialogManager)
         {
-            
+            _viewModelFactory = viewModelFactory;
+            _dialogManager = dialogManager;
         }
 
         private void Toggled()
@@ -190,7 +198,7 @@ namespace LaaServer.ViewModels
             }
         }
 
-        private void Start()
+        private async void Start()
         {
             IpAddress = NetworkHelper.GetAllLocalIPv4(NetworkInterfaceType.Wireless80211).FirstOrDefault();
             this.OnPropertyChanged(null);
@@ -205,7 +213,6 @@ namespace LaaServer.ViewModels
                 }
                 else
                 {
-                    //MessageBox.Show("The firewall port (9091) must be opened. Please restart this app as Administrator.", "Task", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 
 #if DEBUG
                     throw new Exception("The firewall port (9091) must be opened. Please restart this app as Administrator.");
@@ -224,7 +231,8 @@ namespace LaaServer.ViewModels
             {
                 IsOn = false;
                 this.OnPropertyChanged(null);
-                MessageBox.Show("Connection not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                var dialog = _viewModelFactory.CreateMessageBoxViewModel("Error", "Connection not found");
+                await _dialogManager.ShowDialogAsync(dialog);
                 return;
             }
             
@@ -237,20 +245,22 @@ namespace LaaServer.ViewModels
             {
                 IsOn = false;
                 this.OnPropertyChanged(null);
-                MessageBox.Show(e.Message);
+                var dialog = _viewModelFactory.CreateMessageBoxViewModel("Error", e.Message);
+                await _dialogManager.ShowDialogAsync(dialog);
             }
 
             App.IsExit = false;
         }
 
-        private void Restart()
+        private async void Restart()
         {
             if (Server != null)
             {
                 Server.Restart();
             }
 
-            MessageBox.Show("Restart completed");
+            var dialog = _viewModelFactory.CreateMessageBoxViewModel("", "Restart completed");
+            await _dialogManager.ShowDialogAsync(dialog);
         }
 
         private void Stop()

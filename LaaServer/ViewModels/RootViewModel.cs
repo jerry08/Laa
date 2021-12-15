@@ -28,11 +28,23 @@ namespace LaaServer.ViewModels
         private ICommand _onViewLoadedCommand;
         public ICommand OnViewLoadedCommand => _onViewLoadedCommand ??= new CommandHandler((s) => OnViewLoaded(), () => true);
 
+        private ICommand _bthButtonCommand;
+        public ICommand BthButtonCommand => _bthButtonCommand ??= new CommandHandler((s) => NavigateBtnPage(), () => true);
+
+        private ICommand _wifiButtonCommand;
+        public ICommand WifiButtonCommand => _wifiButtonCommand ??= new CommandHandler((s) => NavigateWifiPage(), () => true);
+
+        private ICommand _showSettingsCommand;
+        public ICommand ShowSettingsCommand => _showSettingsCommand ??= new CommandHandler((s) => ShowSettings(), () => true);
+
         public bool CanExecute => true;
         #endregion
 
-        public RootViewModel(IViewModelFactory viewModelFactory, DialogManager dialogManager,
-            SettingsService settingsService, UpdateService updateService)
+        public RootViewModel(
+            IViewModelFactory viewModelFactory, 
+            DialogManager dialogManager,
+            SettingsService settingsService, 
+            UpdateService updateService)
         {
             _dialogManager = dialogManager;
             _viewModelFactory = viewModelFactory;
@@ -99,6 +111,22 @@ namespace LaaServer.ViewModels
             }
 
             await CheckForUpdatesAsync();
+        }
+
+        public void NavigateBtnPage()
+        {
+            App.NavigationService.Navigate(new BluetoothPage() 
+            { 
+                DataContext = _viewModelFactory.CreateBluetoothViewModel()
+            });
+        }
+        
+        public void NavigateWifiPage()
+        {
+            App.NavigationService.Navigate(new WifiPage()
+            {
+                DataContext = _viewModelFactory.CreateWifiViewModel()
+            });
         }
 
         public async void ShowSettings()

@@ -5,7 +5,7 @@ namespace LaaServer.Services
 {
     public class SettingsService : SettingsManager
     {
-        public bool IsAutoUpdateEnabled { get; set; } = false;
+        public bool IsAutoUpdateEnabled { get; set; } = true;
 
         public bool IsDarkModeEnabled { get; set; }
 

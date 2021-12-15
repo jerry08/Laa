@@ -2,28 +2,26 @@
 using InputSimulatorStandard;
 using InputSimulatorStandard.Native;
 using LaaServer.Common.Network;
-using NetFwTypeLib;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using LaaServer;
 using System.Windows.Input;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
 using LaaServer.Common.Services;
 using InTheHand.Net.Sockets;
 using InTheHand.Net.Bluetooth;
 using Laa.Shared;
+using LaaServer.ViewModels.Framework;
+using LaaServer.ViewModels.Dialogs;
 
 namespace LaaServer.ViewModels
 {
     public class BluetoothViewModel : PropertyChangedBase
     {
+        private readonly IViewModelFactory _viewModelFactory;
+        private readonly DialogManager _dialogManager;
+
         public string DeviceName { get; set; }
 
         public bool IsRunning { get { return BluetoothService != null; } }
@@ -108,8 +106,13 @@ namespace LaaServer.ViewModels
         }
         #endregion
 
-        public BluetoothViewModel()
+        public BluetoothViewModel(
+            IViewModelFactory viewModelFactory,
+            DialogManager dialogManager)
         {
+            _viewModelFactory = viewModelFactory;
+            _dialogManager = dialogManager;
+
             if (BluetoothRadio.Default != null)
             {
                 DeviceName = BluetoothRadio.Default.Name;
@@ -196,13 +199,14 @@ namespace LaaServer.ViewModels
             }
         }
 
-        private void Start()
+        private async void Start()
         {
             if (BluetoothRadio.Default == null)
             {
                 IsOn = false;
                 this.OnPropertyChanged(null);
-                MessageBox.Show("Please ensure your bluetooth is turned.", "Laa", MessageBoxButton.OK, MessageBoxImage.Warning);
+                var dialog = _viewModelFactory.CreateMessageBoxViewModel("Laa", "Please ensure your bluetooth is turned.");
+                await _dialogManager.ShowDialogAsync(dialog);
                 return;
             }
 
@@ -215,7 +219,8 @@ namespace LaaServer.ViewModels
             {
                 IsOn = false;
                 this.OnPropertyChanged(null);
-                MessageBox.Show("Please ensure your bluetooth is turned on and paired with your mobile device", "No paried devices found", MessageBoxButton.OK, MessageBoxImage.Warning);
+                var dialog = _viewModelFactory.CreateMessageBoxViewModel("No paried devices found", "Please ensure your bluetooth is turned on and paired with your mobile device");
+                await _dialogManager.ShowDialogAsync(dialog);
                 return;
             }
 
@@ -233,14 +238,15 @@ namespace LaaServer.ViewModels
             this.OnPropertyChanged(null);
         }
 
-        private void Restart()
+        private async void Restart()
         {
             //if (Server != null)
             //{
             //    Server.Restart();
             //}
 
-            MessageBox.Show("Restart completed");
+            var dialog = _viewModelFactory.CreateMessageBoxViewModel("Laa", "Restart completed");
+            await _dialogManager.ShowDialogAsync(dialog);
         }
 
         private void Stop()

@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewModels:RootViewModel}"
         Background="{DynamicResource MaterialDesignBackground}"
-        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" 
         Icon="/LaaServer;component/cherry_icon.ico"
         Style="{DynamicResource MaterialDesignRoot}"
         Title="{Binding DisplayName}" Height="300" Width="500">

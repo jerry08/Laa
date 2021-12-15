@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    MinWidth="500"
+    xmlns:s="https://github.com/canton7/Stylet"
+    MinWidth="300"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Style="{DynamicResource MaterialDesignRoot}"
@@ -22,6 +23,7 @@
             Margin="8,16"
             FontSize="19"
             FontWeight="SemiBold"
+            TextAlignment="Center"
             Text="{Binding Title}"
             TextTrimming="CharacterEllipsis"
             ToolTip="{Binding Title}" />
@@ -30,6 +32,8 @@
         <TextBlock
             Grid.Row="1"
             Margin="8,0,8,8"
+            FontSize="14"
+            TextAlignment="Center"
             Text="{Binding Message}"
             TextWrapping="Wrap" />
 
@@ -38,7 +42,7 @@
             Grid.Row="2"
             Margin="8"
             HorizontalAlignment="Right"
-            Command="{Binding Close}"
+            Command="{s:Action Close}"
             Content="CLOSE"
             IsCancel="True"
             IsDefault="True"

@@ -50,13 +50,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\RootPage.xaml.cs">
+    <Compile Update="Views\MainPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\RootPage.xaml">
+    <Page Update="Views\MainPage.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
