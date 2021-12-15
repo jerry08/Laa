@@ -5,9 +5,9 @@ using System.Windows.Controls;
 
 namespace LaaServer.Views
 {
-    public partial class RootPage : Page
+    public partial class MainPage : Page
     {
-        public RootPage()
+        public MainPage()
         {
             InitializeComponent();
         }

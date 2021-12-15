@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 
-namespace LaaServer
+namespace LaaServer.Views
 {
     public partial class RootView : Window
     {
@@ -13,7 +13,7 @@ namespace LaaServer
         {
             InitializeComponent();
 
-            _mainFrame.Navigate(new RootPage());
+            _mainFrame.Navigate(new MainPage());
         }
 
         private void _mainFrame_Navigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e)

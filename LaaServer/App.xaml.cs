@@ -1,5 +1,6 @@
 ﻿using LaaServer.Utils;
 using LaaServer.ViewModels;
+using LaaServer.Views;
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
@@ -62,15 +63,11 @@ namespace LaaServer
                 return;
             }
 
-            // Set default theme
-            // (preferred theme will be chosen later, once the settings are loaded)
-            App.SetLightTheme();
-
             Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
 
             IsExit = true;
 
-            MainWindow = new RootView();
+            //MainWindow = new RootView();
             MainWindow.Closing += MainWindow_Closing;
             MainWindow.Loaded += (s, e) =>
             {
@@ -89,7 +86,7 @@ namespace LaaServer
             _notifyIcon.Visible = true;
 
             CreateContextMenu();
-            ShowMainWindow();
+            //ShowMainWindow();
         }
 
         private static Theme LightTheme { get; } = Theme.Create(

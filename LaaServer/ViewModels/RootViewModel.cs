@@ -7,18 +7,20 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using LaaServer.Views.Dialogs;
+using LaaServer.ViewModels.Framework;
 
 namespace LaaServer.ViewModels
 {
     public class RootViewModel : PropertyChangedBase
     {
+        private readonly IViewModelFactory _viewModelFactory;
+        private readonly DialogManager _dialogManager;
+        private readonly SettingsService _settingsService;
+        private readonly UpdateService _updateService;
+
         public ISnackbarMessageQueue Notifications { get; } = new SnackbarMessageQueue(TimeSpan.FromSeconds(5));
 
         public IProgressManager ProgressManager { get; } = new ProgressManager();
-
-        private readonly UpdateService _updateService;
-
-        private readonly SettingsService _settingsService;
 
         public string DisplayName { get; set; }
 
@@ -29,10 +31,13 @@ namespace LaaServer.ViewModels
         public bool CanExecute => true;
         #endregion
 
-        public RootViewModel()
+        public RootViewModel(IViewModelFactory viewModelFactory, DialogManager dialogManager,
+            SettingsService settingsService, UpdateService updateService)
         {
-            _settingsService = new SettingsService();
-            _updateService = new UpdateService(_settingsService);
+            _dialogManager = dialogManager;
+            _viewModelFactory = viewModelFactory;
+            _settingsService = settingsService;
+            _updateService = updateService;
 
             // Title
             DisplayName = $"{App.Name} v{App.VersionString}";
@@ -96,10 +101,10 @@ namespace LaaServer.ViewModels
             await CheckForUpdatesAsync();
         }
 
-        public void ShowSettings()
+        public async void ShowSettings()
         {
-            var window = new SettingsView();
-            window.ShowDialog();
+            var dialog = _viewModelFactory.CreateSettingsViewModel();
+            await _dialogManager.ShowDialogAsync(dialog);
         }
     }
 }

@@ -33,6 +33,8 @@
     <PackageReference Include="MaterialDesignThemes" Version="4.4.0-ci22-ci22" />
     <PackageReference Include="MvvmLight" Version="5.4.1.1" />
     <PackageReference Include="Onova" Version="2.6.2" />
+    <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.0" />
+    <PackageReference Include="Stylet" Version="1.3.6" />
     <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
     <PackageReference Include="Tyrrrz.Extensions" Version="1.6.5" />
     <PackageReference Include="Tyrrrz.Settings" Version="1.3.4" />
