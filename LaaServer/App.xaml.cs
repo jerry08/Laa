@@ -196,6 +196,13 @@ namespace LaaServer
             }
             else
             {
+                if (_notifyIcon != null)
+                {
+                    _notifyIcon.Visible = false;
+                    _notifyIcon.Dispose();
+                    _notifyIcon = null;
+                }
+
                 FocusProgram.Set();
                 ProgramOpen.Reset();
                 (App.Current.MainWindow.DataContext as RootViewModel).OnClose();
