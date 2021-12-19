@@ -133,14 +133,21 @@ namespace LaaServer.ViewModels
             }
         }
 
+        //private void ShutDown()
+        //{
+        //    App.IsExit = true;
+        //    Stop();
+        //    var currentProcess = Process.GetCurrentProcess();
+        //    List<Process> processes = Process.GetProcesses()
+        //        .Where(x => x.ProcessName == currentProcess.ProcessName).ToList();
+        //    processes.ForEach(x => x.Kill());
+        //}
+
         private void ShutDown()
         {
-            App.IsExit = true;
             Stop();
-            var currentProcess = Process.GetCurrentProcess();
-            List<Process> processes = Process.GetProcesses()
-                .Where(x => x.ProcessName == currentProcess.ProcessName).ToList();
-            processes.ForEach(x => x.Kill());
+            App.IsExit = true;
+            App.Current.MainWindow.Close();
         }
 
         static string prevMessage = "";
