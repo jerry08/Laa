@@ -1,4 +1,4 @@
-﻿namespace LaaSender
+﻿namespace Laa.Shared
 {
     public enum TouchActionType
     {

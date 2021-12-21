@@ -7,5 +7,7 @@
         
         public const string FirstBkHash = "-08g935n";
         public const string SecondBkHash = "-08g92bn";
+
+        public const string MouseLocationHash = "-23q8eFd";
     }
 }

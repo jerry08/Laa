@@ -162,9 +162,12 @@ namespace LaaServer
             FocusProgram.Set();
             ProgramOpen.Reset();
             MainWindow.Close();
-            _notifyIcon.Visible = false;
-            _notifyIcon.Dispose();
-            _notifyIcon = null;
+            if (_notifyIcon != null)
+            {
+                _notifyIcon.Visible = false;
+                _notifyIcon.Dispose();
+                _notifyIcon = null;
+            }
         }
 
         private void ShowMainWindow()

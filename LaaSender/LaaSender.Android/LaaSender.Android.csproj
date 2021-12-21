@@ -107,6 +107,10 @@
     <AndroidResource Include="Resources\layout\Tabbar.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Laa.Shared\Laa.Shared.csproj">
+      <Project>{fd359c60-c204-4277-806a-22ece34ed83f}</Project>
+      <Name>Laa.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LaaSender\LaaSender.csproj">
       <Project>{0F6B5E0E-11A3-4CAF-AA4E-967E3878B009}</Project>
       <Name>LaaSender</Name>

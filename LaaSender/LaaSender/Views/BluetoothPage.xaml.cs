@@ -10,6 +10,7 @@ using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.Exceptions;
 using System.Linq;
 using Laa.Shared;
+using Newtonsoft.Json;
 
 namespace LaaSender.Views
 {
@@ -63,6 +64,46 @@ namespace LaaSender.Views
                 _service.Send("backspace" + LaaConstants.FirstBkHash);
                 _service.Send("backspace" + LaaConstants.SecondBkHash);
             };
+
+            TouchEffect touchEffect = new TouchEffect();
+            touchEffect.TouchAction += OnTouchEffectAction;
+            TouchPadBoxView.Effects.Add(touchEffect);
+        }
+
+        private void OnTouchEffectAction(object sender, TouchActionEventArgs args)
+        {
+            var pt = new TouchPoint
+            {
+                TouchActionType = (int)args.Type,
+                X = (int)args.Location.X,
+                Y = (int)args.Location.Y
+            };
+
+            string json = JsonConvert.SerializeObject(pt);
+
+            switch (args.Type)
+            {
+                case TouchActionType.Entered:
+                    break;
+                case TouchActionType.Pressed:
+                    break;
+                case TouchActionType.Moved:
+                    if (_service.IsConnected())
+                    {
+                        _service.Send(json + LaaConstants.MouseLocationHash);
+                    }
+                    break;
+                case TouchActionType.Released:
+                    //Don't use here: if (_service.IsConnected())
+                    _service.Send(json + LaaConstants.MouseLocationHash);
+                    break;
+                case TouchActionType.Exited:
+                    break;
+                case TouchActionType.Cancelled:
+                    break;
+                default:
+                    break;
+            }
         }
 
         protected override bool OnBackButtonPressed()

@@ -47,6 +47,8 @@
     <Compile Include="Network\TcpServer.cs" />
     <Compile Include="Network\TcpSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TouchActionType.cs" />
+    <Compile Include="TouchPoint.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,6 +4,8 @@ using System.Linq;
 
 using Xamarin.Forms;
 
+using Laa.Shared;
+
 using CoreGraphics;
 using Foundation;
 using UIKit;

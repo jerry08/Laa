@@ -13,7 +13,7 @@
             <Grid.Background>
                 <SolidColorBrush Color="{AppThemeBinding Dark=#77000000, Light=#77ffffff}" />
             </Grid.Background>
-            <StackLayout Padding="20,80,20,0" Orientation="Vertical" Spacing="15">
+            <StackLayout Padding="20,20,20,0" Orientation="Vertical" Spacing="15">
                 <Entry x:Name="ipaddressTxt" TextColor="Accent" />
                 <Button x:Name="ConnectButton" 
                         Text="Connect" 

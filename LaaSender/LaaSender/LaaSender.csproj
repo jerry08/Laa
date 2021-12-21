@@ -23,6 +23,7 @@
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs" Version="7.2.0.561" />
     <PackageReference Include="ContextMenuContainer" Version="1.0.7" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Plugin.BLE" Version="2.2.0-pre2" />
     <PackageReference Include="Rg.Plugins.Popup" Version="2.0.0.14" />
     <PackageReference Include="Sharpnado.MaterialFrame" Version="1.2.0" />

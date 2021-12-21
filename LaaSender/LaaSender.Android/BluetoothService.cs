@@ -41,8 +41,8 @@ namespace LaaSender.Droid
 
         public bool IsConnected()
         {
-            //return bthSocket != null && bthSocket.IsConnected;
-            return true;
+            return bthSocket != null && bthSocket.IsConnected;
+            //return true;
         }
 
         /*BluetoothSocket bthSocket = null;
@@ -278,6 +278,7 @@ namespace LaaSender.Droid
             }
         }*/
 
+        BluetoothSocket bthSocket = null;
         CancellationTokenSource _cancellationToken;
         private async Task ConnectDevice(string name)
         {
@@ -320,7 +321,7 @@ namespace LaaSender.Droid
 
             BluetoothDevice device = null;
             BluetoothAdapter adapter;
-            BluetoothSocket bthSocket = null;
+            bthSocket = null;
             //BluetoothServerSocket bthServerSocket = null;
 
             UUID uuid = UUID.FromString("00001101-0000-1000-8000-00805f9b34fb");
@@ -479,7 +480,7 @@ namespace LaaSender.Droid
 
             if (!string.IsNullOrEmpty(message))
             {
-                MessageToSend = message;
+                //MessageToSend = message;
                 Messages.Add(message);
             }
         }

@@ -68,11 +68,11 @@ namespace LaaSender.Views
             {
                 service.Connect(DevicesList.SelectedItem?.ToString());
 
-                if (!service.IsConnected())
-                {
-                    await DisplayAlert("ERROR", "Failed to connect :(", "OK");
-                    return;
-                }
+                //if (!service.IsConnected())
+                //{
+                //    await DisplayAlert("ERROR", "Failed to connect :(", "OK");
+                //    return;
+                //}
 
                 BluetoothPage page = new BluetoothPage(service);
                 await App.Current.MainPage.Navigation.PushAsync(new NavigationPage(page), false);
