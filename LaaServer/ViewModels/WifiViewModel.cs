@@ -22,6 +22,7 @@ using LaaServer.ViewModels.Dialogs;
 using TouchPoint = Laa.Shared.TouchPoint;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
 
 namespace LaaServer.ViewModels
 {
@@ -261,6 +262,36 @@ namespace LaaServer.ViewModels
                     StartMovingMouse(points[i]);
                 }
 
+                return;
+            }
+
+            var splitArr = new string[]
+            {
+                LaaConstants.FirstHash,
+                LaaConstants.SecondHash,
+                LaaConstants.FirstBkHash,
+                LaaConstants.SecondBkHash
+            };
+
+            //string[] messages = message.Split(splitArr, StringSplitOptions.None);
+            //string[] messages = Regex.Split(message, LaaConstants.FirstHash);
+            string[] messages = Regex.Split(message, $@"({LaaConstants.FirstHash}|{LaaConstants.SecondHash}|{LaaConstants.FirstBkHash}|{LaaConstants.SecondBkHash})");
+
+            messages = messages.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+
+            for (int i = 0; i < messages.Length; i++)
+            {
+                if (!splitArr.Contains(messages[i]))
+                {
+                    PerformAction(messages[i] + messages[i + 1]);
+                }
+            }
+        }
+
+        static void PerformAction(string message)
+        {
+            if (string.IsNullOrEmpty(message))
+            {
                 return;
             }
 
