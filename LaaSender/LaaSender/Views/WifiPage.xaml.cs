@@ -70,7 +70,7 @@ namespace LaaSender.Views
 
             ipaddressTxt.TextChanged += (s, e) =>
             {
-                ipaddressTxt.TextColor = Color.Default;
+                ipaddressTxt.TextColor = ConnectButton.TextColor;
             };
 
             TouchEffect touchEffect = new TouchEffect();
@@ -97,7 +97,11 @@ namespace LaaSender.Views
             using (UserDialogs.Instance.Loading("Connecting...", null, null, true, MaskType.Black))
             {
                 Client = new ChatClient(ipaddressTxt.Text, 9091);
-                Client.Connect();
+
+                await Task.Run(() => 
+                {
+                    Client.Connect();
+                });
             }
 
             if (Client.IsConnected)
