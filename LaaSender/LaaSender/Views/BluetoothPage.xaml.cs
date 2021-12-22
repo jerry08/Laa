@@ -74,7 +74,7 @@ namespace LaaSender.Views
         {
             var pt = new TouchPoint
             {
-                TouchActionType = (int)args.Type,
+                TouchActionType = args.Type,
                 X = (int)args.Location.X,
                 Y = (int)args.Location.Y
             };

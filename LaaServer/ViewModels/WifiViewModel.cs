@@ -19,6 +19,9 @@ using LaaServer.Common.Services;
 using Laa.Shared;
 using LaaServer.ViewModels.Framework;
 using LaaServer.ViewModels.Dialogs;
+using TouchPoint = Laa.Shared.TouchPoint;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace LaaServer.ViewModels
 {
@@ -150,6 +153,93 @@ namespace LaaServer.ViewModels
             App.Current.MainWindow.Close();
         }
 
+        static int _mouseScale = 3;
+        static TouchPoint TouchPointFrom;
+        static TouchPoint TouchPointTo;
+        static Task MouseTask;
+
+        static void StartMovingMouse(TouchPoint point)
+        {
+            decimal steps = 10;
+
+            if (MouseTask != null && !MouseTask.IsCompleted)
+            {
+                TouchPointTo = point;
+                return;
+            }
+
+            if (TouchPointFrom == null)
+            {
+                if (point.TouchActionType != TouchActionType.Released)
+                {
+                    TouchPointFrom = point;
+                }
+
+                return;
+            }
+
+            TouchPointTo = point;
+
+            MouseTask = Task.Run(async () =>
+            {
+                //int difX = point.X - TouchPointFrom.X;
+                //int difY = point.Y - TouchPointFrom.Y;
+                //if (difX > 5 || difX < -5 || difY > 5 || difY < -5)
+                //{
+                //    while (point.X != TouchPointFrom.X)
+                //    {
+                //        simulator.Mouse.MoveMouseBy(point.X - TouchPointFrom.X, point.Y - TouchPointFrom.Y);
+                //    }
+                //    
+                //    TouchPointFrom = point;
+                //}
+
+                while (TouchPointTo.TouchActionType != TouchActionType.Released)
+                {
+                    //int x = point.X - TouchPointFrom.X;
+                    //int y = point.Y - TouchPointFrom.Y;
+
+                    int x = 0;
+                    int y = 0;
+
+                    int diffX = TouchPointTo.X - TouchPointFrom.X;
+                    int diffY = TouchPointTo.Y - TouchPointFrom.Y;
+
+                    if (diffX > -10 && diffX < 10)
+                    {
+                        TouchPointTo.X = TouchPointFrom.X;
+                    }
+
+                    if (diffY > -10 && diffY < 10)
+                    {
+                        TouchPointTo.Y = TouchPointFrom.Y;
+                    }
+
+                    decimal x2 = diffX;
+                    x = (int)Math.Round(x2 / steps);
+                    TouchPointFrom.X += x;
+
+                    decimal y2 = diffY;
+                    y = (int)Math.Round(y2 / steps);
+                    TouchPointFrom.Y += y;
+
+                    //this.DeviceName = $"x: {x * _mouseScale},  y: {y * _mouseScale}";
+                    //this.OnPropertyChanged(null);
+                    simulator.Mouse.MoveMouseBy(x * _mouseScale, y * _mouseScale);
+
+                    //Thread.Sleep(2);
+                    await Task.Delay(1);
+                }
+
+                //TouchPointFrom = TouchPointTo;
+
+                if (TouchPointTo.TouchActionType == TouchActionType.Released)
+                {
+                    TouchPointFrom = null;
+                }
+            });
+        }
+
         static string prevMessage = "";
         static string prevBkMessage = "";
         static InputSimulator simulator = new InputSimulator();
@@ -157,6 +247,20 @@ namespace LaaServer.ViewModels
         {
             if (string.IsNullOrEmpty(message))
             {
+                return;
+            }
+
+            if (message.EndsWith(LaaConstants.MouseLocationHash))
+            {
+                string val = "[" + message.Replace(LaaConstants.MouseLocationHash, "")
+                    .Replace("}{", "},{") + "]";
+
+                var points = JsonConvert.DeserializeObject<List<TouchPoint>>(val);
+                for (int i = 0; i < points.Count; i++)
+                {
+                    StartMovingMouse(points[i]);
+                }
+
                 return;
             }
 

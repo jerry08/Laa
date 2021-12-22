@@ -17,6 +17,7 @@ using Java.IO;
 //using BluetoothSample.Services.Interfaces;
 using Java.Util;
 using LaaSender.Droid;
+using Newtonsoft.Json;
 using Xamarin.Forms;
 using Debug = System.Diagnostics.Debug;
 
@@ -390,7 +391,7 @@ namespace LaaSender.Droid
 
                                 while (_cancellationToken.IsCancellationRequested == false)
                                 {
-                                    //if (!string.IsNullOrEmpty(MessageToSend))
+                                    /*//if (!string.IsNullOrEmpty(MessageToSend))
                                     if (Messages.Count > 0 && !string.IsNullOrEmpty(Messages[0]))
                                     {
                                         var msg = Messages[0];
@@ -427,6 +428,24 @@ namespace LaaSender.Droid
                                         Messages.RemoveAt(0);
 
                                         MessageToSend = null;
+                                    }*/
+
+                                    //if (!string.IsNullOrEmpty(MessageToSend))
+                                    if (Messages.Count > 0)
+                                    {
+                                        var msg = JsonConvert.SerializeObject(Messages);
+                                        Messages.Clear();
+
+                                        byte[] msgBytes = Encoding.UTF8.GetBytes(msg);
+
+                                        //await bthSocket.OutputStream.WriteAsync(Encoding.ASCII.GetBytes(MessageToSend), 0, MessageToSend.Length);
+                                        //bthSocket.OutputStream.Write(Encoding.ASCII.GetBytes(MessageToSend), 0, MessageToSend.Length);
+                                        await bthSocket.OutputStream.WriteAsync(msgBytes, 0, msgBytes.Length);
+                                        //bthSocket.Close();
+                                        bthSocket.OutputStream.Close();
+
+                                        bthSocket = device.CreateInsecureRfcommSocketToServiceRecord(uuid);
+                                        await bthSocket.ConnectAsync();
                                     }
                                 }
                             }

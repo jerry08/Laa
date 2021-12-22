@@ -1,6 +1,8 @@
 ﻿using Laa.Shared;
 using LaaSender.Common.Network;
+using Newtonsoft.Json;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -64,10 +66,26 @@ namespace LaaSender.Views
             {
                 ipaddressTxt.Text = lastIpAddess.Result;
             }
+
+            TouchEffect touchEffect = new TouchEffect();
+            touchEffect.TouchAction += OnTouchEffectAction;
+            TouchPadBoxView.Effects.Add(touchEffect);
         }
 
         private async void ConnectButton_Clicked(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(ipaddressTxt.Text))
+            {
+                await DisplayAlert("", "Ip address cannot be empty", "OK");
+                return;
+            }
+
+            if (!IPAddress.TryParse(ipaddressTxt.Text, out _))
+            {
+                await DisplayAlert("", "Invalid ip address", "OK");
+                return;
+            }
+
             await SecureStorage.SetAsync("lastIpAddress", ipaddressTxt.Text);
 
             Client = new ChatClient(ipaddressTxt.Text, 9091);
@@ -89,6 +107,38 @@ namespace LaaSender.Views
             //var ReceiverAudioAddress = new IPEndPoint(IPAddress.Parse(ipaddressTxt.Text), Util.ReceiverPort);
             //udpSender = new UdpClient();
             //udpSender.Connect(ReceiverAudioAddress);
+        }
+
+        private void OnTouchEffectAction(object sender, TouchActionEventArgs args)
+        {
+            var pt = new TouchPoint
+            {
+                TouchActionType = args.Type,
+                X = (int)args.Location.X,
+                Y = (int)args.Location.Y
+            };
+
+            string json = JsonConvert.SerializeObject(pt);
+
+            switch (args.Type)
+            {
+                case TouchActionType.Entered:
+                    break;
+                case TouchActionType.Pressed:
+                    break;
+                case TouchActionType.Moved:
+                    Client?.Send(json + LaaConstants.MouseLocationHash);
+                    break;
+                case TouchActionType.Released:
+                    Client?.Send(json + LaaConstants.MouseLocationHash);
+                    break;
+                case TouchActionType.Exited:
+                    break;
+                case TouchActionType.Cancelled:
+                    break;
+                default:
+                    break;
+            }
         }
 
         //protected override bool OnBackButtonPressed() => false;

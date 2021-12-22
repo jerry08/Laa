@@ -17,6 +17,7 @@ using LaaServer.ViewModels.Dialogs;
 using Newtonsoft.Json;
 using TouchPoint = Laa.Shared.TouchPoint;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace LaaServer.ViewModels
 {
@@ -146,10 +147,10 @@ namespace LaaServer.ViewModels
 
         int _mouseScale = 2;
         TouchPoint TouchPointFrom;
-        /*TouchPoint TouchPointTo;
+        TouchPoint TouchPointTo;
         Task MouseTask;
 
-        void StartMovingMouse()
+        /*void StartMovingMouse()
         {
             if (MouseTask != null && !MouseTask.IsCompleted)
             {
@@ -171,10 +172,190 @@ namespace LaaServer.ViewModels
             });
         }*/
 
+        /*void StartMovingMouse(TouchPoint point)
+        {
+            if (MouseTask != null && !MouseTask.IsCompleted)
+            {
+                TouchPointTo = point;
+                return;
+            }
+
+            if (TouchPointFrom == null)
+            {
+                TouchPointFrom = point;
+                return;
+            }
+
+            TouchPointTo = point;
+
+            MouseTask = Task.Run(async () =>
+            {
+                //int difX = point.X - TouchPointFrom.X;
+                //int difY = point.Y - TouchPointFrom.Y;
+                //if (difX > 5 || difX < -5 || difY > 5 || difY < -5)
+                //{
+                //    while (point.X != TouchPointFrom.X)
+                //    {
+                //        simulator.Mouse.MoveMouseBy(point.X - TouchPointFrom.X, point.Y - TouchPointFrom.Y);
+                //    }
+                //    
+                //    TouchPointFrom = point;
+                //}
+
+                //while (TouchPointTo.X != TouchPointFrom.X || TouchPointTo.Y != TouchPointFrom.Y)
+                while (TouchPointTo.TouchActionType != TouchActionType.Released)
+                {
+                    //int x = point.X - TouchPointFrom.X;
+                    //int y = point.Y - TouchPointFrom.Y;
+
+                    int x = 0;
+                    int y = 0;
+
+                    if (TouchPointTo.X != TouchPointFrom.X)
+                    {
+                        if ((TouchPointFrom.X - TouchPointTo.X) < 0)
+                        {
+                            TouchPointFrom.X += 1;
+                            x = 1;
+                        }
+                        else
+                        {
+                            TouchPointFrom.X += -1;
+                            x = -1;
+                        }
+                    }
+
+                    if (TouchPointTo.Y != TouchPointFrom.Y)
+                    {
+                        if ((TouchPointFrom.Y - TouchPointTo.Y) < 0)
+                        {
+                            TouchPointFrom.Y += 1;
+                            y = 1;
+                        }
+                        else
+                        {
+                            TouchPointFrom.Y += -1;
+                            y = -1;
+                        }
+                    }
+
+                    //this.DeviceName = $"x: {x * _mouseScale},  y: {y * _mouseScale}";
+                    //this.OnPropertyChanged(null);
+                    simulator.Mouse.MoveMouseBy(x * _mouseScale, y * _mouseScale);
+                    
+                    //Thread.Sleep(2);
+                    await Task.Delay(1);
+                }
+
+                //TouchPointFrom = TouchPointTo;
+
+                if (TouchPointTo.TouchActionType == TouchActionType.Released)
+                {
+                    TouchPointFrom = null;
+                }
+            });
+        }*/
+
+        void StartMovingMouse(TouchPoint point)
+        {
+            decimal steps = 10;
+
+            if (MouseTask != null && !MouseTask.IsCompleted)
+            {
+                TouchPointTo = point;
+                return;
+            }
+
+            if (TouchPointFrom == null)
+            {
+                if (point.TouchActionType != TouchActionType.Released)
+                {
+                    TouchPointFrom = point;
+                }
+                
+                return;
+            }
+
+            TouchPointTo = point;
+
+            MouseTask = Task.Run(async () =>
+            {
+                //int difX = point.X - TouchPointFrom.X;
+                //int difY = point.Y - TouchPointFrom.Y;
+                //if (difX > 5 || difX < -5 || difY > 5 || difY < -5)
+                //{
+                //    while (point.X != TouchPointFrom.X)
+                //    {
+                //        simulator.Mouse.MoveMouseBy(point.X - TouchPointFrom.X, point.Y - TouchPointFrom.Y);
+                //    }
+                //    
+                //    TouchPointFrom = point;
+                //}
+
+                while (TouchPointTo.TouchActionType != TouchActionType.Released)
+                {
+                    //int x = point.X - TouchPointFrom.X;
+                    //int y = point.Y - TouchPointFrom.Y;
+
+                    int x = 0;
+                    int y = 0;
+
+                    int diffX = TouchPointTo.X - TouchPointFrom.X;
+                    int diffY = TouchPointTo.Y - TouchPointFrom.Y;
+
+                    if (diffX > -10 && diffX < 10)
+                    {
+                        TouchPointTo.X = TouchPointFrom.X;
+                    }
+
+                    if (diffY > -10 && diffY < 10)
+                    {
+                        TouchPointTo.Y = TouchPointFrom.Y;
+                    }
+
+                    decimal x2 = diffX;
+                    x = (int)Math.Round(x2 / steps);
+                    TouchPointFrom.X += x;
+
+                    decimal y2 = diffY;
+                    y = (int)Math.Round(y2 / steps);
+                    TouchPointFrom.Y += y;
+
+                    //this.DeviceName = $"x: {x * _mouseScale},  y: {y * _mouseScale}";
+                    //this.OnPropertyChanged(null);
+                    simulator.Mouse.MoveMouseBy(x * _mouseScale, y * _mouseScale);
+
+                    //Thread.Sleep(2);
+                    await Task.Delay(1);
+                }
+
+                //TouchPointFrom = TouchPointTo;
+
+                if (TouchPointTo.TouchActionType == TouchActionType.Released)
+                {
+                    TouchPointFrom = null;
+                }
+            });
+        }
+
+        private void MessageReceived(string message)
+        {
+            if (string.IsNullOrEmpty(message))
+            {
+                return;
+            }
+
+            List<string> messages = JsonConvert.DeserializeObject<List<string>>(message);
+            for (int i = 0; i < messages.Count; i++)
+            {
+                PerformAction(messages[i]);
+            }
+        }
+
         string prevMessage = "";
         string prevBkMessage = "";
         InputSimulator simulator = new InputSimulator();
-        private void MessageReceived(string message)
+        private void PerformAction(string message)
         {
             if (string.IsNullOrEmpty(message))
             {
@@ -185,6 +366,10 @@ namespace LaaServer.ViewModels
             {
                 string val = message.Replace(LaaConstants.MouseLocationHash, "");
                 var point = JsonConvert.DeserializeObject<TouchPoint>(val);
+
+                StartMovingMouse(point);
+                return;
+
                 if (TouchPointFrom == null)
                 {
                     TouchPointFrom = point;
@@ -240,11 +425,12 @@ namespace LaaServer.ViewModels
                         }
 
                         simulator.Mouse.MoveMouseBy(x * _mouseScale, y * _mouseScale);
+                        Thread.Sleep(2);
                     }
 
                     TouchPointFrom = point;
                 }
-                
+
                 if (point.TouchActionType == TouchActionType.Released)
                 {
                     TouchPointFrom = null;

@@ -34,6 +34,20 @@
                                       VerticalTextAlignment="Start" 
                                       TextColor="Accent" 
                                       BackgroundColor="Transparent" />
+                <Frame HorizontalOptions="FillAndExpand" 
+                       VerticalOptions="FillAndExpand" 
+                       HasShadow="False" 
+                       Padding="0"
+                       CornerRadius="20" 
+                       OutlineColor="LightGreen">
+                    <BoxView x:Name="TouchPadBoxView" 
+                             Color="Transparent" 
+                             BackgroundColor="Transparent" 
+                             HorizontalOptions="FillAndExpand" 
+                             VerticalOptions="FillAndExpand">
+
+                    </BoxView>
+                </Frame>
             </StackLayout>
         </Grid>
     </sh:MaterialFrame>
