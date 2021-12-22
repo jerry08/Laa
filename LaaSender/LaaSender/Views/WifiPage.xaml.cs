@@ -1,4 +1,5 @@
-﻿using Laa.Shared;
+﻿using Acr.UserDialogs;
+using Laa.Shared;
 using LaaSender.Common.Network;
 using Newtonsoft.Json;
 using System;
@@ -67,6 +68,11 @@ namespace LaaSender.Views
                 ipaddressTxt.Text = lastIpAddess.Result;
             }
 
+            ipaddressTxt.TextChanged += (s, e) =>
+            {
+                ipaddressTxt.TextColor = Color.Default;
+            };
+
             TouchEffect touchEffect = new TouchEffect();
             touchEffect.TouchAction += OnTouchEffectAction;
             TouchPadBoxView.Effects.Add(touchEffect);
@@ -88,25 +94,27 @@ namespace LaaSender.Views
 
             await SecureStorage.SetAsync("lastIpAddress", ipaddressTxt.Text);
 
-            Client = new ChatClient(ipaddressTxt.Text, 9091);
-            Client.Connect();
-
-            ConnectButton.Text = "Connecting...";
+            using (UserDialogs.Instance.Loading("Connecting...", null, null, true, MaskType.Black))
+            {
+                Client = new ChatClient(ipaddressTxt.Text, 9091);
+                Client.Connect();
+            }
 
             if (Client.IsConnected)
             {
-                ConnectButton.Text = "Connected";
-                ConnectButton.TextColor = Color.Green;
+                ipaddressTxt.TextColor = Color.Green;
+
+                var toastConfig = new ToastConfig("Connected");
+                toastConfig.SetDuration(3000);
+
+                UserDialogs.Instance.Toast(toastConfig);
+                //await DisplayAlert("", "Connected", "OK");
             }
             else
             {
-                ConnectButton.Text = "Connect";
-                ConnectButton.TextColor = Color.Red;
+                ipaddressTxt.TextColor = Color.Red;
+                await DisplayAlert("", "Failed to connect :(", "OK");
             }
-
-            //var ReceiverAudioAddress = new IPEndPoint(IPAddress.Parse(ipaddressTxt.Text), Util.ReceiverPort);
-            //udpSender = new UdpClient();
-            //udpSender.Connect(ReceiverAudioAddress);
         }
 
         private void OnTouchEffectAction(object sender, TouchActionEventArgs args)
