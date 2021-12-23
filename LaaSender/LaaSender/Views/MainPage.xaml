@@ -17,7 +17,7 @@
             <StackLayout VerticalOptions="Center">
                 <Button x:Name="BluetoothButton" 
                         Text="Bluetooth" 
-                        FontSize="24" 
+                        FontSize="28" 
                         HorizontalOptions="FillAndExpand" 
                         VerticalOptions="Center" 
                         Clicked="BluetoothButton_Clicked"
@@ -25,7 +25,7 @@
                         BackgroundColor="Transparent" />
                 <Button x:Name="WifiButton" 
                         Text="Wifi" 
-                        FontSize="24" 
+                        FontSize="28" 
                         HorizontalOptions="FillAndExpand" 
                         VerticalOptions="Center" 
                         Clicked="WifiButton_Clicked"

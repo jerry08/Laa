@@ -1,17 +1,13 @@
-﻿using LaaSender.Common.Network;
-using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Xamarin.Essentials;
+﻿using System;
 using Xamarin.Forms;
 
 namespace LaaSender.Views
 {
-    public partial class MainPageBluetooth : ContentPage
+    public partial class BluetoothDevicesPage : ContentPage
     {
         IBluetoothService service;
 
-        public MainPageBluetooth()
+        public BluetoothDevicesPage()
         {
             InitializeComponent();
 

@@ -14,7 +14,7 @@
             <Grid.Background>
                 <SolidColorBrush Color="{AppThemeBinding Dark=#77000000, Light=#77ffffff}" />
             </Grid.Background>
-            <StackLayout Padding="20,80,20,0" Orientation="Vertical" Spacing="15">
+            <StackLayout Padding="20,20,20,0" Orientation="Vertical" Spacing="15">
                 <StackLayout Orientation="Horizontal">
                     <Switch x:Name="ShowTextSwitch" />
                     <Label Text="Show all text?" TextColor="Accent" />

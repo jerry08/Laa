@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:LaaSender"
              xmlns:sh="clr-namespace:LaaSender.Helpers"
-             x:Class="LaaSender.Views.MainPageBluetooth"
+             x:Class="LaaSender.Views.BluetoothDevicesPage"
              NavigationPage.HasNavigationBar="False">
     <sh:MaterialFrame
         Style="{StaticResource DefaultFrame}"
@@ -14,11 +14,7 @@
             <Grid.Background>
                 <SolidColorBrush Color="{AppThemeBinding Dark=#77000000, Light=#77ffffff}" />
             </Grid.Background>
-            <StackLayout>
-                <Button Text="Search" 
-                        Clicked="searchDevice" 
-                        TextColor="Accent" 
-                        BackgroundColor="Transparent" />
+            <StackLayout Padding="20,20,20,0">
                 <ListView x:Name="DevicesList"
                           IsPullToRefreshEnabled="true"
                           CachingStrategy="RecycleElement"
@@ -27,12 +23,17 @@
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout>
-                                    <Label Text="{Binding .}"></Label>
+                                    <Label Text="{Binding .}" FontSize="14"></Label>
                                 </StackLayout>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+                <Button Text="Search" 
+                        FontSize="22"
+                        Clicked="searchDevice" 
+                        TextColor="Accent" 
+                        BackgroundColor="Transparent" />
             </StackLayout>
         </Grid>
     </sh:MaterialFrame>

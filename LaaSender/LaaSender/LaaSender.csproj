@@ -43,8 +43,8 @@
     <Compile Update="Views\WifiPage.xaml.cs">
       <DependentUpon>WifiPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\MainPageBluetooth.xaml.cs">
-      <DependentUpon>MainPageBluetooth.xaml</DependentUpon>
+    <Compile Update="Views\BluetoothDevicesPage.xaml.cs">
+      <DependentUpon>BluetoothDevicesPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

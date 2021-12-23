@@ -14,7 +14,7 @@ namespace LaaSender.Views
 
         private async void BluetoothButton_Clicked(object sender, EventArgs e)
         {
-            await App.Current.MainPage.Navigation.PushAsync(new NavigationPage(new MainPageBluetooth()), false);
+            await App.Current.MainPage.Navigation.PushAsync(new NavigationPage(new BluetoothDevicesPage()), false);
             //App.Current.MainPage.Navigation.RemovePage(this);
         }
 

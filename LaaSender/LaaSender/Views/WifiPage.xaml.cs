@@ -4,6 +4,7 @@ using LaaSender.Common.Network;
 using Newtonsoft.Json;
 using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -94,14 +95,19 @@ namespace LaaSender.Views
 
             await SecureStorage.SetAsync("lastIpAddress", ipaddressTxt.Text);
 
-            using (UserDialogs.Instance.Loading("Connecting...", null, null, true, MaskType.Black))
+            using (UserDialogs.Instance.Loading("Connecting...", null, null, true, MaskType.Gradient))
             {
                 Client = new ChatClient(ipaddressTxt.Text, 9091);
 
+                CancellationTokenSource s_cts = new CancellationTokenSource();
+                s_cts.CancelAfter(7500);
+
                 await Task.Run(() => 
                 {
-                    Client.Connect();
-                });
+                    Client.ConnectAsync();
+                    while (!Client.IsConnected && !s_cts.IsCancellationRequested) {
+                    }
+                }, s_cts.Token);
             }
 
             if (Client.IsConnected)
@@ -116,6 +122,8 @@ namespace LaaSender.Views
             }
             else
             {
+                Client.DisconnectAndStop();
+
                 ipaddressTxt.TextColor = Color.Red;
                 await DisplayAlert("", "Failed to connect :(", "OK");
             }
