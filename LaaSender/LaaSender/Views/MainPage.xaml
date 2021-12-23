@@ -4,12 +4,9 @@
              xmlns:local="clr-namespace:LaaSender"
              xmlns:sh="clr-namespace:LaaSender.Helpers"
              x:Class="LaaSender.Views.MainPage"
+             BackgroundColor="Transparent"
              NavigationPage.HasNavigationBar="False">
-    <sh:MaterialFrame
-        Style="{StaticResource DefaultFrame}"
-        StyleClass="blur"
-        UwpHostBackdropBlur="True"
-        macOSBehindWindowBlur="True">
+    <sh:MaterialFrame Style="{StaticResource DefaultFrame}" StyleClass="blur">
         <Grid>
             <Grid.Background>
                 <SolidColorBrush Color="{AppThemeBinding Dark=#77000000, Light=#77ffffff}" />
@@ -29,6 +26,14 @@
                         HorizontalOptions="FillAndExpand" 
                         VerticalOptions="Center" 
                         Clicked="WifiButton_Clicked"
+                        TextColor="Accent" 
+                        BackgroundColor="Transparent" />
+                <Button x:Name="SettingsButton" 
+                        Text="Settings" 
+                        FontSize="28" 
+                        HorizontalOptions="FillAndExpand" 
+                        VerticalOptions="Center" 
+                        Clicked="SettingsButton_Clicked"
                         TextColor="Accent" 
                         BackgroundColor="Transparent" />
             </StackLayout>

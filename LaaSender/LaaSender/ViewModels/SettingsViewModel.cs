@@ -7,6 +7,14 @@ namespace LaaSender.ViewModels
 {
     public class SettingsViewModel : BaseViewModel
     {
+        public string AppVersion
+        {
+            get 
+            {
+                return VersionTracking.CurrentVersion;
+            }
+        }
+        
         public bool LightTheme
         {
             get => Preferences.Get(nameof(LightTheme), false);
@@ -54,18 +62,20 @@ namespace LaaSender.ViewModels
             }
         }
 
-        public ICommand LogoutCommand { get; set; }
-        public ICommand ViewAccountCommand { get; set; }
+        public ICommand GithubCommand { get; set; }
         public ICommand DoneCommand { get; set; }
 
         public SettingsViewModel()
         {
             DoneCommand = new Command(Done);
+            GithubCommand = new Command(Github);
             SetAppTheme();
         }
 
         public void SetAppTheme()
         {
+            App.Current.Resources["BlurTheme"] = MaterialFrame.Theme.AcrylicBlur;
+
             if (DefaultTheme)
                 //Application.Current.UserAppTheme = OSAppTheme.Unspecified;
                 Application.Current.UserAppTheme = OSAppTheme.Dark;
@@ -95,6 +105,11 @@ namespace LaaSender.ViewModels
             }
         }
 
+        async void Github()
+        {
+            await Browser.OpenAsync("https://github.com/jerry08/Laa");
+        }
+        
         async void Done()
         {
             await App.Current.MainPage.Navigation.PopModalAsync();

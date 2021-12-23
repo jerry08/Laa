@@ -23,6 +23,11 @@ namespace LaaSender.Views
             await App.Current.MainPage.Navigation.PushAsync(new NavigationPage(new WifiPage()), false);
             //App.Current.MainPage.Navigation.RemovePage(this);
         }
+        
+        private async void SettingsButton_Clicked(object sender, EventArgs e)
+        {
+            await App.Current.MainPage.Navigation.PushModalAsync(new SettingsView());
+        }
 
         protected override bool OnBackButtonPressed()
         {

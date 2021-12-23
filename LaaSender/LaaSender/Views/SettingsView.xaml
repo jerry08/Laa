@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="LaaSender.Views.SettingsView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    xmlns:sh="clr-namespace:LaaSender.Helpers"
+    xmlns:vm="clr-namespace:LaaSender.ViewModels"
+    ios:Page.ModalPresentationStyle="FormSheet"
+    x:DataType="vm:SettingsViewModel">
+    <ContentPage.BindingContext>
+        <vm:SettingsViewModel />
+    </ContentPage.BindingContext>
+    <sh:MaterialFrame Style="{StaticResource DefaultFrame}" StyleClass="blur">
+        <Grid>
+            <Grid.Background>
+                <SolidColorBrush Color="{AppThemeBinding Dark=#77000000, Light=#77ffffff}" />
+            </Grid.Background>
+            <ScrollView
+                Margin="15,0"
+                Padding="{OnPlatform Default='0,110,15,15',
+                                     iOS='0,90,15,15',
+                                     UWP='0,138,15,15'}"
+                VerticalScrollBarVisibility="Never">
+                <StackLayout>
+                    <!--<Label FontSize="28" Text="Appearance" />
+                    <StackLayout>
+                        <Label Text="Transeparency effects" />
+                        <Switch
+                            HorizontalOptions="Start"
+                            IsToggled="{Binding IsAcrylic}"
+                            OnColor="Accent" />
+                    </StackLayout>
+                    <BoxView
+                        Margin="5,25,-10,5"
+                        BackgroundColor="{AppThemeBinding Dark=#1b1b1b,
+                                                          Light=LightGray}"
+                        HeightRequest="1" />-->
+                    <Label
+                        FontSize="28"
+                        Text="Mode" />
+                    <StackLayout Spacing="0">
+                        <RadioButton Content="Light" IsChecked="{Binding LightTheme}" />
+                        <RadioButton Content="Dark" IsChecked="{Binding DarkTheme}" />
+                        <RadioButton Content="Use system setting" IsChecked="{Binding DefaultTheme}" />
+                    </StackLayout>
+                    <BoxView
+                        Margin="5,25,-10,5"
+                        BackgroundColor="{AppThemeBinding Dark=#1b1b1b,
+                                                          Light=LightGray}"
+                        HeightRequest="1" />
+                    <Label
+                        Margin="0,20,0,0"
+                        FontSize="28"
+                        Text="About" />
+                    <StackLayout>
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span
+                                        FontAttributes="Bold"
+                                        FontSize="18"
+                                        Text="Laa: " />
+                                    <Span FontSize="14" Text="v" />
+                                    <Span FontSize="14" Text="{Binding AppVersion}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label Margin="0,0,10,0" Text="Laa is an open source project that allows a user to link their mobile device to a pc via bluetooth or wifi and use it as a keyboard or mouse." />
+                        <Button Text="Source"
+                                FontSize="14"
+                                TextColor="Accent"
+                                Command="{Binding GithubCommand}" />
+                    </StackLayout>
+                </StackLayout>
+            </ScrollView>
+            <sh:MaterialFrame
+                Padding="{OnPlatform Default='15,15,5,15',
+                                     Android='15,40,5,15',
+                                     UWP='15,58,5,15'}"
+                HeightRequest="{OnPlatform Default=35,
+                                           UWP=38}"
+                Style="{StaticResource DefaultFrame}"
+                VerticalOptions="Start">
+                <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand">
+                    <Label
+                        FontSize="{OnPlatform Default=18,
+                                              UWP=28}"
+                        HorizontalOptions="{OnPlatform Default=CenterAndExpand,
+                                                       UWP=StartAndExpand}"
+                        HorizontalTextAlignment="Center"
+                        Text="Settings"
+                        VerticalOptions="CenterAndExpand" />
+                    <Button
+                        Margin="-55,0,0,0"
+                        Padding="0"
+                        BackgroundColor="Transparent"
+                        Command="{Binding DoneCommand}"
+                        CornerRadius="3"
+                        HorizontalOptions="End"
+                        Text="Done"
+                        TextColor="Accent"
+                        VerticalOptions="{OnPlatform Default=CenterAndExpand,
+                                                     UWP=EndAndExpand}"
+                        WidthRequest="55" />
+                </StackLayout>
+            </sh:MaterialFrame>
+        </Grid>
+    </sh:MaterialFrame>
+</ContentPage>
