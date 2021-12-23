@@ -162,12 +162,21 @@ namespace LaaSender.Views
         }
 
         //protected override bool OnBackButtonPressed() => false;
-        protected override bool OnBackButtonPressed() 
+        /*protected override bool OnBackButtonPressed() 
         {
             //See reference: https://stackoverflow.com/a/49282833
             //System.Diagnostics.Process.GetCurrentProcess().CloseMainWindow();
-            System.Diagnostics.Process.GetCurrentProcess().Kill();
+
+            //System.Diagnostics.Process.GetCurrentProcess().Kill();
+            App.Exit();
+
             return false;
+        }*/
+
+        protected override bool OnBackButtonPressed()
+        {
+            App.ConfirmExit();
+            return true;
         }
     }
 }

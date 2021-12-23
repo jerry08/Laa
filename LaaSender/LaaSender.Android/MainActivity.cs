@@ -64,7 +64,7 @@ namespace LaaSender.Droid
             {
                 // Do something if there are not any pages in the `PopupStack`
 
-                Finish();
+                //Finish();
             }
         }
     }

@@ -108,8 +108,8 @@ namespace LaaSender.Views
 
         protected override bool OnBackButtonPressed()
         {
-            System.Diagnostics.Process.GetCurrentProcess().Kill();
-            return false;
+            App.ConfirmExit();
+            return true;
         }
     }
 }
