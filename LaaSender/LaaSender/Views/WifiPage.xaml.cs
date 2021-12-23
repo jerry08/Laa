@@ -32,8 +32,8 @@ namespace LaaSender.Views
                 KeyboardEntry.Text = "";
             };
 
-            AllTxt.IsVisible = false;
-            ShowTextSwitch.IsToggled = false;
+            AllTxt.IsVisible = true;
+            ShowTextSwitch.IsToggled = true;
 
             ShowTextSwitch.Toggled += (s, e) =>
             {

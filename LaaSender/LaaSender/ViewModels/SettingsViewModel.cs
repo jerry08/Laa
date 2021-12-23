@@ -51,16 +51,18 @@ namespace LaaSender.ViewModels
             }
         }
 
-        public bool IsAcrylic
-        {
-            get => Preferences.Get(nameof(IsAcrylic), Device.RuntimePlatform == Device.Android ? false : true);
-            set
-            {
-                Preferences.Set(nameof(IsAcrylic), value);
-                OnPropertyChanged(nameof(IsAcrylic));
-                SetMaterialFrameStyle();
-            }
-        }
+        //Applies to Material Frames without StyleClass="blur"
+        //AcrylicBlur bug when navigating
+        //public bool IsAcrylic
+        //{
+        //    get => Preferences.Get(nameof(IsAcrylic), Device.RuntimePlatform == Device.Android ? false : true);
+        //    set
+        //    {
+        //        Preferences.Set(nameof(IsAcrylic), value);
+        //        OnPropertyChanged(nameof(IsAcrylic));
+        //        SetMaterialFrameStyle();
+        //    }
+        //}
 
         public ICommand GithubCommand { get; set; }
         public ICommand DoneCommand { get; set; }
@@ -74,8 +76,6 @@ namespace LaaSender.ViewModels
 
         public void SetAppTheme()
         {
-            App.Current.Resources["BlurTheme"] = MaterialFrame.Theme.AcrylicBlur;
-
             if (DefaultTheme)
                 //Application.Current.UserAppTheme = OSAppTheme.Unspecified;
                 Application.Current.UserAppTheme = OSAppTheme.Dark;
@@ -91,7 +91,7 @@ namespace LaaSender.ViewModels
         {
             var mf = new MaterialFrame();
 
-            if (IsAcrylic == true)
+            /*if (IsAcrylic == true)
             {
                 App.Current.Resources["BlurTheme"] = MaterialFrame.Theme.AcrylicBlur;
             }
@@ -102,7 +102,16 @@ namespace LaaSender.ViewModels
             else if (IsAcrylic == false && mf.MaterialBlurStyle == MaterialFrame.BlurStyle.ExtraLight)
             {
                 App.Current.Resources["BlurTheme"] = MaterialFrame.Theme.Acrylic;
-            }
+            }*/
+
+            if (DefaultTheme)
+                App.Current.Resources["BlurTheme"] = MaterialFrame.Theme.Dark;
+            else if (DarkTheme)
+                App.Current.Resources["BlurTheme"] = MaterialFrame.Theme.Dark;
+            else if (LightTheme)
+                App.Current.Resources["BlurTheme"] = MaterialFrame.Theme.Light;
+            else
+                App.Current.Resources["BlurTheme"] = MaterialFrame.Theme.Acrylic;
         }
 
         async void Github()

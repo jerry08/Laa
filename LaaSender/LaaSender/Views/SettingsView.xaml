@@ -81,6 +81,7 @@
                 HeightRequest="{OnPlatform Default=35,
                                            UWP=38}"
                 Style="{StaticResource DefaultFrame}"
+                StyleClass="blur"
                 VerticalOptions="Start">
                 <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand">
                     <Label
