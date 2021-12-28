@@ -74,9 +74,18 @@ namespace LaaSender.Views
                 ipaddressTxt.TextColor = ConnectButton.TextColor;
             };
 
+            //var tapGestureRecognizer = new TapGestureRecognizer() { NumberOfTapsRequired = 1 };
+            //tapGestureRecognizer.Tapped += (s, e) =>
+            //{
+            //    Client?.Send(LaaConstants.Tapped1);
+            //    Client?.Send(LaaConstants.Tapped2);
+            //};
+            //TouchPadBoxView.GestureRecognizers.Add(tapGestureRecognizer);
+
             TouchEffect touchEffect = new TouchEffect();
             touchEffect.TouchAction += OnTouchEffectAction;
             TouchPadBoxView.Effects.Add(touchEffect);
+            //TouchPadGrid.Effects.Add(touchEffect);
         }
 
         private async void ConnectButton_Clicked(object sender, EventArgs e)
@@ -97,7 +106,7 @@ namespace LaaSender.Views
 
             using (UserDialogs.Instance.Loading("Connecting...", null, null, true, MaskType.Gradient))
             {
-                Client = new ChatClient(ipaddressTxt.Text, 9091);
+                Client = new ChatClient(ipaddressTxt.Text, LaaConstants.WifiPort);
 
                 CancellationTokenSource s_cts = new CancellationTokenSource();
                 s_cts.CancelAfter(7500);
@@ -129,6 +138,8 @@ namespace LaaSender.Views
             }
         }
 
+        TouchPoint lastTouchPoint;
+
         private void OnTouchEffectAction(object sender, TouchActionEventArgs args)
         {
             var pt = new TouchPoint
@@ -145,11 +156,25 @@ namespace LaaSender.Views
                 case TouchActionType.Entered:
                     break;
                 case TouchActionType.Pressed:
+                    lastTouchPoint = pt;
                     break;
                 case TouchActionType.Moved:
                     Client?.Send(json + LaaConstants.MouseLocationHash);
                     break;
                 case TouchActionType.Released:
+                    if (lastTouchPoint != null)
+                    {
+                        int diffX = lastTouchPoint.X - pt.X;
+                        int diffY = lastTouchPoint.Y - pt.Y;
+
+                        if ((diffX > -5 && diffX < 5)
+                            || (diffY > -5 && diffY < 5))
+                        {
+                            Client?.Send(LaaConstants.Tapped1);
+                            Client?.Send(LaaConstants.Tapped2);
+                        }
+                    }
+                    lastTouchPoint = null;
                     Client?.Send(json + LaaConstants.MouseLocationHash);
                     break;
                 case TouchActionType.Exited:

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Laa.Shared;
 using NetFwTypeLib;
 
 namespace LaaServer
@@ -31,13 +32,13 @@ namespace LaaServer
             INetFwRule firewallRule = (INetFwRule)Activator.CreateInstance(
                 Type.GetTypeFromProgID("HNetCfg.FWRule"));
             firewallRule.Action = NET_FW_ACTION_.NET_FW_ACTION_ALLOW;
-            firewallRule.Description = "Used to allow port 9091.";
+            firewallRule.Description = $"Used to allow port {LaaConstants.WifiPort}.";
             firewallRule.Direction = NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT;
             firewallRule.Enabled = true;
             firewallRule.Protocol = (int)NET_FW_IP_PROTOCOL_.NET_FW_IP_PROTOCOL_TCP;
-            firewallRule.LocalPorts = "9091";
+            firewallRule.LocalPorts = $"{LaaConstants.WifiPort}";
             firewallRule.InterfaceTypes = "All";
-            firewallRule.Name = "9091 test";
+            firewallRule.Name = $"{LaaConstants.WifiPort} Laa";
 
             INetFwPolicy2 firewallPolicy = (INetFwPolicy2)Activator.CreateInstance(
                 Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));

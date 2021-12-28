@@ -23,6 +23,7 @@ using TouchPoint = Laa.Shared.TouchPoint;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace LaaServer.ViewModels
 {
@@ -195,16 +196,18 @@ namespace LaaServer.ViewModels
                 //    TouchPointFrom = point;
                 //}
 
+                int x = 0;
+                int y = 0;
+
+                int diffX = TouchPointTo.X - TouchPointFrom.X;
+                int diffY = TouchPointTo.Y - TouchPointFrom.Y;
+
                 while (TouchPointTo.TouchActionType != TouchActionType.Released)
                 {
-                    //int x = point.X - TouchPointFrom.X;
-                    //int y = point.Y - TouchPointFrom.Y;
-
-                    int x = 0;
-                    int y = 0;
-
-                    int diffX = TouchPointTo.X - TouchPointFrom.X;
-                    int diffY = TouchPointTo.Y - TouchPointFrom.Y;
+                    x = 0;
+                    y = 0;
+                    diffX = TouchPointTo.X - TouchPointFrom.X;
+                    diffY = TouchPointTo.Y - TouchPointFrom.Y;
 
                     if (diffX > -10 && diffX < 10)
                     {
@@ -228,6 +231,15 @@ namespace LaaServer.ViewModels
                     //this.OnPropertyChanged(null);
                     simulator.Mouse.MoveMouseBy(x * _mouseScale, y * _mouseScale);
 
+                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "test.txt");
+
+                    using (FileStream fs = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                    {
+                        fs.Seek(0, SeekOrigin.End);
+                        byte[] buffer = Encoding.Default.GetBytes($"X: {x * _mouseScale},  Y: {y * _mouseScale}" + " \r\n ");
+                        fs.Write(buffer, 0, buffer.Length);
+                    }
+
                     //Thread.Sleep(2);
                     await Task.Delay(1);
                 }
@@ -242,6 +254,7 @@ namespace LaaServer.ViewModels
         }
 
         static string prevMessage = "";
+        static string prevTapMessage = "";
         static string prevBkMessage = "";
         static InputSimulator simulator = new InputSimulator();
         public static void MessageReceived(string message)
@@ -251,7 +264,9 @@ namespace LaaServer.ViewModels
                 return;
             }
 
-            if (message.EndsWith(LaaConstants.MouseLocationHash))
+            if (message.EndsWith(LaaConstants.MouseLocationHash) &&
+                !message.Contains(LaaConstants.Tapped1) &&
+                !message.Contains(LaaConstants.Tapped2))
             {
                 string val = "[" + message.Replace(LaaConstants.MouseLocationHash, "")
                     .Replace("}{", "},{") + "]";
@@ -275,15 +290,24 @@ namespace LaaServer.ViewModels
 
             //string[] messages = message.Split(splitArr, StringSplitOptions.None);
             //string[] messages = Regex.Split(message, LaaConstants.FirstHash);
-            string[] messages = Regex.Split(message, $@"({LaaConstants.FirstHash}|{LaaConstants.SecondHash}|{LaaConstants.FirstBkHash}|{LaaConstants.SecondBkHash})");
+            string[] messages = Regex.Split(message, $@"({LaaConstants.FirstHash}|{LaaConstants.SecondHash}|{LaaConstants.FirstBkHash}|{LaaConstants.SecondBkHash}|{LaaConstants.Tapped1}|{LaaConstants.Tapped2})");
 
             messages = messages.Where(x => !string.IsNullOrEmpty(x)).ToArray();
 
             for (int i = 0; i < messages.Length; i++)
             {
+                if (messages[i] == LaaConstants.Tapped1 || messages[i] == LaaConstants.Tapped2)
+                {
+                    PerformAction(messages[i]);
+                    continue;
+                }
+
                 if (!splitArr.Contains(messages[i]))
                 {
-                    PerformAction(messages[i] + messages[i + 1]);
+                    if (!messages[i].Contains(LaaConstants.MouseLocationHash))
+                    {
+                        PerformAction(messages[i] + messages[i + 1]);
+                    }
                 }
             }
         }
@@ -294,6 +318,18 @@ namespace LaaServer.ViewModels
             {
                 return;
             }
+
+            if (message.Contains(LaaConstants.Tapped2))
+            {
+                if (prevTapMessage.Contains(LaaConstants.Tapped1))
+                {
+                    prevTapMessage = message;
+                    return;
+                }
+            }
+
+            if (message.Contains(LaaConstants.Tapped2) || message.Contains(LaaConstants.Tapped1))
+                prevTapMessage = message;
 
             if (message.EndsWith(LaaConstants.SecondHash))
             {
@@ -334,6 +370,10 @@ namespace LaaServer.ViewModels
 
                 simulator.Keyboard.KeyPress(VirtualKeyCode.BACK);
             }
+            else if (message.Contains(LaaConstants.Tapped2) || message.Contains(LaaConstants.Tapped1))
+            {
+                simulator.Mouse.LeftButtonClick();
+            }
             else
             {
                 simulator.Keyboard.TextEntry(message);
@@ -345,7 +385,7 @@ namespace LaaServer.ViewModels
             IpAddress = NetworkHelper.GetAllLocalIPv4(NetworkInterfaceType.Wireless80211).FirstOrDefault();
             this.OnPropertyChanged(null);
 
-            int port = 9091;
+            int port = LaaConstants.WifiPort;
 
             if (!FirewallHelper.IsPortOpen(port))
             {
@@ -357,11 +397,11 @@ namespace LaaServer.ViewModels
                 {
 
 #if DEBUG
-                    throw new Exception("The firewall port (9091) must be opened. Please restart this app as Administrator.");
+                    throw new Exception($"The firewall port ({LaaConstants.WifiPort}) must be opened. Please restart this app as Administrator.");
 #else
                     if (!App.IsAdministrator())
                     {
-                        MessageBox.Show("The firewall port (9091) must be opened. The app will restart as Admin", "Laa", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        MessageBox.Show($"The firewall port ({LaaConstants.WifiPort}) must be opened. The app will restart as Admin", "Laa", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                         App.RestartAsAdmin();
                         return;
                     }

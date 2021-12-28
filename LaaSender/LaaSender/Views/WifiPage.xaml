@@ -46,8 +46,34 @@
                              BackgroundColor="Transparent" 
                              HorizontalOptions="FillAndExpand" 
                              VerticalOptions="FillAndExpand">
-
+                        
                     </BoxView>
+                    <!--<Grid x:Name="TouchPadGrid"
+                          HorizontalOptions="FillAndExpand" 
+                          VerticalOptions="FillAndExpand"
+                          BackgroundColor="Transparent" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30*" />
+                            <ColumnDefinition Width="60*" />
+                            <ColumnDefinition Width="30*" />
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="LeftButton"
+                                Grid.Column="0"
+                                Text="Left Click"
+                                VerticalOptions="Start"
+                                HorizontalOptions="Start"
+                                TextColor="Green"
+                                BackgroundColor="Aqua"
+                                BorderColor="Yellow" />
+                        <Button x:Name="RightButton"
+                                Grid.Column="2"
+                                Text="Right Click"
+                                VerticalOptions="Start"
+                                HorizontalOptions="End"
+                                TextColor="Green"
+                                BackgroundColor="Aqua"
+                                BorderColor="Yellow" />
+                    </Grid>-->
                 </Frame>
             </StackLayout>
         </Grid>

@@ -78,7 +78,7 @@ namespace LaaSender.ViewModels
         {
             if (DefaultTheme)
                 //Application.Current.UserAppTheme = OSAppTheme.Unspecified;
-                Application.Current.UserAppTheme = OSAppTheme.Dark;
+                Application.Current.UserAppTheme = OSAppTheme.Light;
             else if (DarkTheme)
                 Application.Current.UserAppTheme = OSAppTheme.Dark;
             else if (LightTheme)
@@ -105,7 +105,7 @@ namespace LaaSender.ViewModels
             }*/
 
             if (DefaultTheme)
-                App.Current.Resources["BlurTheme"] = MaterialFrame.Theme.Dark;
+                App.Current.Resources["BlurTheme"] = MaterialFrame.Theme.Light;
             else if (DarkTheme)
                 App.Current.Resources["BlurTheme"] = MaterialFrame.Theme.Dark;
             else if (LightTheme)

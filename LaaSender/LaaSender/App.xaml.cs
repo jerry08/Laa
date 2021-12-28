@@ -1,6 +1,8 @@
 ﻿using APES.UI.XF;
+using Laa.Shared;
 using LaaSender.ViewModels;
 using LaaSender.Views;
+using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -27,6 +29,9 @@ namespace LaaSender
             settingsViewModel.SetAppTheme();
 
             ContextMenuContainer.Init();
+
+            //Cache first
+            JsonConvert.SerializeObject(new TouchPoint());
         }
 
         protected override void OnStart()
