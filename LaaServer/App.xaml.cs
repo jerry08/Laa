@@ -90,7 +90,7 @@ namespace LaaServer
             _notifyIcon = new System.Windows.Forms.NotifyIcon();
             _notifyIcon.DoubleClick += (s, args) => ShowMainWindow();
             //_notifyIcon.Icon = BackgroundApplication.Properties.Resources.MyIcon;
-            _notifyIcon.Icon = new System.Drawing.Icon(App.GetResourceStream(new Uri("pack://application:,,,/cherry_icon.ico")).Stream);
+            _notifyIcon.Icon = new System.Drawing.Icon(App.GetResourceStream(new Uri("pack://application:,,,/logo.ico")).Stream);
             _notifyIcon.Visible = true;
 
             CreateContextMenu();

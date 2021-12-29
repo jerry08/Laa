@@ -5,13 +5,12 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
-    <ApplicationIcon>cherry_icon.ico</ApplicationIcon>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
     <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="cherry_icon.ico" />
-    <None Remove="cherry_icon.png" />
+    <None Remove="logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,8 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="cherry_icon.ico" />
-    <Resource Include="cherry_icon.png" />
+    <Resource Include="logo.ico" />
   </ItemGroup>
 
   <ItemGroup>

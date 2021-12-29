@@ -16,7 +16,7 @@ namespace LaaServer.Views
             _mainFrame.Navigate(new MainPage());
         }
 
-        private void _mainFrame_Navigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e)
+        private void _mainFrame_Navigating(object sender, NavigatingCancelEventArgs e)
         {
             var ta = new ThicknessAnimation();
             ta.Duration = TimeSpan.FromSeconds(0.3);

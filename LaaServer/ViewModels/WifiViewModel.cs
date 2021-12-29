@@ -162,6 +162,8 @@ namespace LaaServer.ViewModels
 
         static void StartMovingMouse(TouchPoint point)
         {
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "test.txt");
+
             decimal steps = 10;
 
             if (MouseTask != null && !MouseTask.IsCompleted)
@@ -221,22 +223,28 @@ namespace LaaServer.ViewModels
 
                     decimal x2 = diffX;
                     x = (int)Math.Round(x2 / steps);
-                    TouchPointFrom.X += x;
 
                     decimal y2 = diffY;
                     y = (int)Math.Round(y2 / steps);
+
+                    if (x * _mouseScale > 10 || x * _mouseScale < -10
+                        || y * _mouseScale > 10 || y * _mouseScale < -10)
+                    {
+                        x = (int)Math.Round(x / 2m);
+                        y = (int)Math.Round(y / 2m);
+                    }
+
+                    TouchPointFrom.X += x;
                     TouchPointFrom.Y += y;
 
                     //this.DeviceName = $"x: {x * _mouseScale},  y: {y * _mouseScale}";
                     //this.OnPropertyChanged(null);
                     simulator.Mouse.MoveMouseBy(x * _mouseScale, y * _mouseScale);
-
-                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "test.txt");
-
+                    
                     using (FileStream fs = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
                     {
                         fs.Seek(0, SeekOrigin.End);
-                        byte[] buffer = Encoding.Default.GetBytes($"X: {x * _mouseScale},  Y: {y * _mouseScale}" + " \r\n ");
+                        byte[] buffer = Encoding.Default.GetBytes($"X: {x * _mouseScale},  Y: {y * _mouseScale},   time: {DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss.ffff")}" + " \r\n ");
                         fs.Write(buffer, 0, buffer.Length);
                     }
 
@@ -249,6 +257,13 @@ namespace LaaServer.ViewModels
                 if (TouchPointTo.TouchActionType == TouchActionType.Released)
                 {
                     TouchPointFrom = null;
+
+                    using (FileStream fs = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                    {
+                        fs.Seek(0, SeekOrigin.End);
+                        byte[] buffer = Encoding.Default.GetBytes($"Stopped,   time: {DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss.ffff")}" + " \r\n ");
+                        fs.Write(buffer, 0, buffer.Length);
+                    }
                 }
             });
         }
