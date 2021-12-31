@@ -21,8 +21,10 @@
                         FontSize="24" 
                         HorizontalOptions="FillAndExpand" 
                         Clicked="ConnectButton_Clicked"
-                        TextColor="Accent" BackgroundColor="Transparent" />
-                <StackLayout Orientation="Horizontal">
+                        TextColor="Accent" 
+                        BackgroundColor="Transparent" />
+                <StackLayout x:Name="ShowTextStackPanel" 
+                             Orientation="Horizontal">
                     <Switch x:Name="ShowTextSwitch" />
                     <Label Text="Show all text?" />
                 </StackLayout>
@@ -35,19 +37,50 @@
                                       VerticalTextAlignment="Start" 
                                       TextColor="Accent" 
                                       BackgroundColor="Transparent" />
-                <Frame HorizontalOptions="FillAndExpand" 
+                <Frame x:Name="TouchPadFrame" 
+                       HorizontalOptions="FillAndExpand" 
                        VerticalOptions="FillAndExpand" 
                        HasShadow="False" 
                        Padding="0"
                        CornerRadius="20" 
                        OutlineColor="LightGreen">
-                    <BoxView x:Name="TouchPadBoxView" 
-                             Color="Transparent" 
-                             BackgroundColor="Transparent" 
-                             HorizontalOptions="FillAndExpand" 
-                             VerticalOptions="FillAndExpand">
-                        
-                    </BoxView>
+                    <Grid RowSpacing="0" Margin="7,4,7,7" BackgroundColor="Transparent">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="3*"/>
+                            <RowDefinition Height="7*"/>
+                        </Grid.RowDefinitions>
+                        <!--The buttons right click,roller,left click-->
+                        <!--Margin="2,2,2,0"-->
+                        <Grid Grid.Row="0" ColumnSpacing="0" BackgroundColor="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="11*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="11*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="LeftButton"
+                                    CornerRadius="20"
+                                    Clicked="LeftButton_Clicked"
+                                    Grid.Column="0"
+                                    Text="Left Click"
+                                    TextColor="Green"
+                                    BackgroundColor="Aqua"
+                                    BorderColor="Yellow" />
+                            <Button x:Name="RightButton"
+                                    CornerRadius="20"
+                                    Clicked="RightButton_Clicked"
+                                    Grid.Column="2"
+                                    Text="Right Click"
+                                    TextColor="Green"
+                                    BackgroundColor="Aqua"
+                                    BorderColor="Yellow" />
+                        </Grid>
+                        <BoxView x:Name="TouchPadBoxView" 
+                                 Grid.Row="1" Margin="0,5,0,0"
+                                 Color="Transparent" 
+                                 BackgroundColor="Transparent" 
+                                 HorizontalOptions="FillAndExpand" 
+                                 VerticalOptions="FillAndExpand" />
+                    </Grid>
                     <!--<Grid x:Name="TouchPadGrid"
                           HorizontalOptions="FillAndExpand" 
                           VerticalOptions="FillAndExpand"
@@ -75,6 +108,14 @@
                                 BorderColor="Yellow" />
                     </Grid>-->
                 </Frame>
+
+                <Button x:Name="KeyboardOrMouseButton" 
+                        Text="Show Mouse"
+                        FontSize="26" 
+                        HorizontalOptions="FillAndExpand" 
+                        VerticalOptions="End"
+                        Clicked="KeyboardOrMouseButton_Clicked"
+                        TextColor="Accent" />
             </StackLayout>
         </Grid>
     </sh:MaterialFrame>

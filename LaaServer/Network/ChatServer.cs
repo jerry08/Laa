@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace LaaServer.Common.Network
+namespace LaaServer.Network
 {
     class ChatSession : TcpSession
     {

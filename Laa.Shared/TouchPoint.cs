@@ -9,5 +9,7 @@ namespace Laa.Shared
         public int X { get; set; }
 
         public int Y { get; set; }
+
+        public long DateTimeTicks { get; set; }
     }
 }

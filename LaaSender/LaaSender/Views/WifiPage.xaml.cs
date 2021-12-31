@@ -1,8 +1,9 @@
 ﻿using Acr.UserDialogs;
 using Laa.Shared;
-using LaaSender.Common.Network;
+using LaaSender.Network;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,11 +14,15 @@ namespace LaaSender.Views
 {
     public partial class WifiPage : ContentPage
     {
-        ChatClient Client;
+        //ChatClient Client;
+        EchoClient Client;
+        bool MouseOn = false;
 
         public WifiPage()
         {
             InitializeComponent();
+
+            SwitchViews();
 
             KeyboardEntry.TextChanged += (s, e) =>
             {
@@ -32,7 +37,6 @@ namespace LaaSender.Views
                 KeyboardEntry.Text = "";
             };
 
-            AllTxt.IsVisible = true;
             ShowTextSwitch.IsToggled = true;
 
             ShowTextSwitch.Toggled += (s, e) =>
@@ -106,14 +110,14 @@ namespace LaaSender.Views
 
             using (UserDialogs.Instance.Loading("Connecting...", null, null, true, MaskType.Gradient))
             {
-                Client = new ChatClient(ipaddressTxt.Text, LaaConstants.WifiPort);
+                Client = new EchoClient(ipaddressTxt.Text, LaaConstants.WifiPort);
 
                 CancellationTokenSource s_cts = new CancellationTokenSource();
                 s_cts.CancelAfter(7500);
 
                 await Task.Run(() => 
                 {
-                    Client.ConnectAsync();
+                    Client.Connect();
                     while (!Client.IsConnected && !s_cts.IsCancellationRequested) {
                     }
                 }, s_cts.Token);
@@ -138,44 +142,66 @@ namespace LaaSender.Views
             }
         }
 
-        TouchPoint lastTouchPoint;
+        private void KeyboardOrMouseButton_Clicked(object sender, EventArgs e)
+        {
+            MouseOn = !MouseOn;
+            SwitchViews();
+        }
+
+        void SwitchViews()
+        {
+            if (MouseOn)
+            {
+                KeyboardOrMouseButton.Text = "Show Keyboard";
+
+                ShowTextStackPanel.IsVisible = false;
+                AllTxt.IsVisible = false;
+                KeyboardEntry.IsVisible = false;
+
+                TouchPadFrame.IsVisible = true;
+            }
+            else
+            {
+                KeyboardOrMouseButton.Text = "Show Mouse";
+
+                ShowTextStackPanel.IsVisible = true;
+                AllTxt.IsVisible = true;
+                KeyboardEntry.IsVisible = true;
+
+                TouchPadFrame.IsVisible = false;
+
+                KeyboardEntry.Focus();
+            }
+        }
+
+        List<TouchPoint> TouchPoints = new List<TouchPoint>();
 
         private void OnTouchEffectAction(object sender, TouchActionEventArgs args)
         {
-            var pt = new TouchPoint
+            var touchPoint = new TouchPoint
             {
                 TouchActionType = args.Type,
                 X = (int)args.Location.X,
-                Y = (int)args.Location.Y
+                Y = (int)args.Location.Y,
+                DateTimeTicks = DateTime.Now.Ticks
             };
 
-            string json = JsonConvert.SerializeObject(pt);
+            string json = JsonConvert.SerializeObject(touchPoint);
 
             switch (args.Type)
             {
                 case TouchActionType.Entered:
                     break;
                 case TouchActionType.Pressed:
-                    lastTouchPoint = pt;
                     break;
                 case TouchActionType.Moved:
+                    TouchPoints.Add(touchPoint);
+                    //System.Console.WriteLine($"{touchPoint.X}, {touchPoint.Y}");
                     Client?.Send(json + LaaConstants.MouseLocationHash);
                     break;
                 case TouchActionType.Released:
-                    if (lastTouchPoint != null)
-                    {
-                        int diffX = lastTouchPoint.X - pt.X;
-                        int diffY = lastTouchPoint.Y - pt.Y;
-
-                        if ((diffX > -5 && diffX < 5)
-                            || (diffY > -5 && diffY < 5))
-                        {
-                            Client?.Send(LaaConstants.Tapped1);
-                            Client?.Send(LaaConstants.Tapped2);
-                        }
-                    }
-                    lastTouchPoint = null;
-                    Client?.Send(json + LaaConstants.MouseLocationHash);
+                    //Client?.Send(json + LaaConstants.MouseLocationHash);
+                    TouchPoints.Clear();
                     break;
                 case TouchActionType.Exited:
                     break;
@@ -202,6 +228,18 @@ namespace LaaSender.Views
         {
             App.ConfirmExit();
             return true;
+        }
+
+        private void LeftButton_Clicked(object sender, EventArgs e)
+        {
+            Client?.Send(LaaConstants.Tapped1);
+            Client?.Send(LaaConstants.Tapped2);
+        }
+
+        private void RightButton_Clicked(object sender, EventArgs e)
+        {
+            Client?.Send(LaaConstants.Tapped1);
+            Client?.Send(LaaConstants.Tapped2);
         }
     }
 }

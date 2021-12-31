@@ -1,4 +1,5 @@
-﻿using LaaServer.Utils;
+﻿using Laa.Shared;
+using LaaServer.Utils;
 using LaaServer.ViewModels;
 using LaaServer.Views;
 using MaterialDesignThemes.Wpf;
@@ -52,7 +53,32 @@ namespace LaaServer
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            /*TouchPoint pointFrom = new TouchPoint()
+            {
+                X = 256,
+                Y = 191
+            };
+
+            TouchPoint pointTo = new TouchPoint()
+            {
+                X = 259,
+                Y = 192
+            };
+
+            int x = 0;
+            int y = 0;
+
+            int diffX = pointTo.X - pointFrom.X;
+            int diffY = pointTo.Y - pointFrom.Y;
+
+            var simulator = new InputSimulatorStandard.InputSimulator();
+            simulator.Mouse.MoveMouseBy(30, 10);*/
+
             base.OnStartup(e);
+
+            //https://stackoverflow.com/questions/160587/no-output-to-console-from-a-wpf-application
+            //Console.WriteLine($"test"); //Doesn't work in wpf?
+            //Trace.WriteLine("test");
 
             _mutex = new Mutex(true, AppName, out bool createdNew);
 

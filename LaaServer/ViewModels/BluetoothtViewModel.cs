@@ -1,7 +1,6 @@
 ﻿using Gress;
 using InputSimulatorStandard;
 using InputSimulatorStandard.Native;
-using LaaServer.Common.Network;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -367,75 +366,8 @@ namespace LaaServer.ViewModels
                 string val = message.Replace(LaaConstants.MouseLocationHash, "");
                 var point = JsonConvert.DeserializeObject<TouchPoint>(val);
 
+                Trace.WriteLine($"x: {point.X}, y: {point.Y}");
                 StartMovingMouse(point);
-                return;
-
-                if (TouchPointFrom == null)
-                {
-                    TouchPointFrom = point;
-                }
-                else
-                {
-                    //int difX = point.X - TouchPointFrom.X;
-                    //int difY = point.Y - TouchPointFrom.Y;
-                    //if (difX > 5 || difX < -5 || difY > 5 || difY < -5)
-                    //{
-                    //    while (point.X != TouchPointFrom.X)
-                    //    {
-                    //        simulator.Mouse.MoveMouseBy(point.X - TouchPointFrom.X, point.Y - TouchPointFrom.Y);
-                    //    }
-                    //    
-                    //    TouchPointFrom = point;
-                    //}
-
-                    while (point.X != TouchPointFrom.X || point.Y != TouchPointFrom.Y)
-                    {
-                        //int x = point.X - TouchPointFrom.X;
-                        //int y = point.Y - TouchPointFrom.Y;
-
-                        int x = 0;
-                        int y = 0;
-
-                        if (point.X != TouchPointFrom.X)
-                        {
-                            if ((TouchPointFrom.X - point.X) < 0)
-                            {
-                                TouchPointFrom.X += 1;
-                                x = 1;
-                            }
-                            else
-                            {
-                                TouchPointFrom.X += -1;
-                                x = -1;
-                            }
-                        }
-
-                        if (point.Y != TouchPointFrom.Y)
-                        {
-                            if ((TouchPointFrom.Y - point.Y) < 0)
-                            {
-                                TouchPointFrom.Y += 1;
-                                y = 1;
-                            }
-                            else
-                            {
-                                TouchPointFrom.Y += -1;
-                                y = -1;
-                            }
-                        }
-
-                        simulator.Mouse.MoveMouseBy(x * _mouseScale, y * _mouseScale);
-                        Thread.Sleep(2);
-                    }
-
-                    TouchPointFrom = point;
-                }
-
-                if (point.TouchActionType == TouchActionType.Released)
-                {
-                    TouchPointFrom = null;
-                }
-
                 return;
             }
 

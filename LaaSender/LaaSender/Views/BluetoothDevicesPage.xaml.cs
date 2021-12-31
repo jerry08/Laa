@@ -13,6 +13,12 @@ namespace LaaSender.Views
 
             service = DependencyService.Get<IBluetoothService>();
 
+            DevicesList.Refreshing += (s, e) =>
+            {
+                Init();
+                DevicesList.IsRefreshing = false;
+            };
+
             Init();
         }
 

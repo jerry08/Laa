@@ -1,5 +1,4 @@
-﻿using LaaSender.Common.Network;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
@@ -16,6 +15,7 @@ namespace LaaSender.Views
 {
     public partial class BluetoothPage : ContentPage
     {
+        bool MouseOn = false;
         private IBluetoothService _service;
 
         public BluetoothPage(IBluetoothService service)
@@ -23,6 +23,8 @@ namespace LaaSender.Views
             _service = service;
 
             InitializeComponent();
+
+            SwitchViews();
 
             KeyboardEntry.TextChanged += (s, e) =>
             {
@@ -39,7 +41,6 @@ namespace LaaSender.Views
 
             //KeyboardEntry.IsSpellCheckEnabled = true;
 
-            AllTxt.IsVisible = true;
             ShowTextSwitch.IsToggled = true;
 
             ShowTextSwitch.Toggled += (s, e) =>
@@ -68,6 +69,38 @@ namespace LaaSender.Views
             TouchEffect touchEffect = new TouchEffect();
             touchEffect.TouchAction += OnTouchEffectAction;
             TouchPadBoxView.Effects.Add(touchEffect);
+        }
+
+        private void KeyboardOrMouseButton_Clicked(object sender, EventArgs e)
+        {
+            MouseOn = !MouseOn;
+            SwitchViews();
+        }
+
+        void SwitchViews()
+        {
+            if (MouseOn)
+            {
+                KeyboardOrMouseButton.Text = "Show Keyboard";
+
+                ShowTextStackPanel.IsVisible = false;
+                AllTxt.IsVisible = false;
+                KeyboardEntry.IsVisible = false;
+
+                TouchPadFrame.IsVisible = true;
+            }
+            else
+            {
+                KeyboardOrMouseButton.Text = "Show Mouse";
+
+                ShowTextStackPanel.IsVisible = true;
+                AllTxt.IsVisible = true;
+                KeyboardEntry.IsVisible = true;
+
+                TouchPadFrame.IsVisible = false;
+
+                KeyboardEntry.Focus();
+            }
         }
 
         private void OnTouchEffectAction(object sender, TouchActionEventArgs args)
@@ -104,6 +137,18 @@ namespace LaaSender.Views
                 default:
                     break;
             }
+        }
+
+        private void LeftButton_Clicked(object sender, EventArgs e)
+        {
+            _service.Send(LaaConstants.Tapped1);
+            _service.Send(LaaConstants.Tapped2);
+        }
+
+        private void RightButton_Clicked(object sender, EventArgs e)
+        {
+            _service.Send(LaaConstants.Tapped1);
+            _service.Send(LaaConstants.Tapped2);
         }
 
         protected override bool OnBackButtonPressed()

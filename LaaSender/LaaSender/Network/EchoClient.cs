@@ -4,41 +4,40 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using TcpClient = NetCoreServer.TcpClient;
+using UdpClient = NetCoreServer.UdpClient;
 
 namespace LaaSender.Network
 {
-    class ChatClient : TcpClient
+    class EchoClient : UdpClient
     {
-        public ChatClient(string address, int port) : base(address, port) 
-        {
-            
-        }
+        public EchoClient(string address, int port) : base(address, port) { }
 
         public void DisconnectAndStop()
         {
             _stop = true;
-            DisconnectAsync();
+            Disconnect();
             while (IsConnected)
                 Thread.Yield();
         }
 
         protected override void OnConnected()
         {
-            //Console.WriteLine($"Chat TCP client connected a new session with Id {Id}");
+            Console.WriteLine($"Echo UDP client connected a new session with Id {Id}");
+
+            // Start receive datagrams
+            ReceiveAsync();
         }
 
         protected override void OnDisconnected()
         {
-            //Console.WriteLine($"Chat TCP client disconnected a session with Id {Id}");
+            Console.WriteLine($"Echo UDP client disconnected a session with Id {Id}");
 
-            // Wait for a while...
             Thread.Sleep(1000);
 
             if (_retryCount > 3)
             {
                 _stop = true;
-                DisconnectAsync();
+                Disconnect();
                 Thread.Yield();
             }
 
@@ -46,17 +45,20 @@ namespace LaaSender.Network
 
             // Try to connect again
             if (!_stop)
-                ConnectAsync();
+                Connect();
         }
 
-        protected override void OnReceived(byte[] buffer, long offset, long size)
+        protected override void OnReceived(EndPoint endpoint, byte[] buffer, long offset, long size)
         {
-            //Console.WriteLine(Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
+            Console.WriteLine("Incoming: " + Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
+
+            // Continue receive datagrams
+            ReceiveAsync();
         }
 
         protected override void OnError(SocketError error)
         {
-            //Console.WriteLine($"Chat TCP client caught an error with code {error}");
+            Console.WriteLine($"Echo UDP client caught an error with code {error}");
         }
 
         private bool _stop;
