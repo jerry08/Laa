@@ -34,11 +34,11 @@ namespace LaaSender.Droid
             {
                 Manifest.Permission.AccessNetworkState,
                 //Manifest.Permission.AccessCoarseLocation,
+                //Manifest.Permission.AccessFineLocation,
+                //Manifest.Permission.AccessBackgroundLocation,
                 Manifest.Permission.BluetoothPrivileged,
                 Manifest.Permission.Bluetooth,
                 Manifest.Permission.BluetoothAdmin,
-                //Manifest.Permission.AccessFineLocation,
-                //Manifest.Permission.AccessBackgroundLocation,
                 //Manifest.Permission.LocationHardware,
                 //Manifest.Permission.Internet,
             }, 0);

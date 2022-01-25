@@ -23,7 +23,7 @@
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout>
-                                    <Label Text="{Binding .}" FontSize="14"></Label>
+                                    <Label Text="{Binding DeviceName}" FontSize="14"></Label>
                                 </StackLayout>
                             </ViewCell>
                         </DataTemplate>
@@ -31,7 +31,7 @@
                 </ListView>
                 <Button Text="Search" 
                         FontSize="22"
-                        Clicked="searchDevice" 
+                        Clicked="SearchDevice" 
                         TextColor="Accent" 
                         BackgroundColor="Transparent" />
             </StackLayout>

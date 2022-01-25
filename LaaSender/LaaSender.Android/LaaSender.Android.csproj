@@ -60,6 +60,7 @@
     <AndroidPackageFormat>aab</AndroidPackageFormat>
     <AndroidKeyStore>false</AndroidKeyStore>
     <AndroidDexTool>d8</AndroidDexTool>
+    <MandroidI18n />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
@@ -90,10 +91,10 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BluetoothService.cs">
+    <Compile Include="MainActivity.cs" />
+    <Compile Include="PlatformServices\BluetoothRequestService.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainActivity.cs" />
     <Compile Include="Renderers\OTPCustomEntryRenderer_android.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -139,5 +140,6 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\logo.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

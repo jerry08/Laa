@@ -28,7 +28,7 @@
   <ItemGroup>
     <PackageReference Include="Gress" Version="1.2.0" />
     <PackageReference Include="InputSimulatorStandard" Version="1.0.0" />
-    <PackageReference Include="InTheHand.Net.Bluetooth" Version="4.0.24" />
+    <PackageReference Include="InTheHand.Net.Bluetooth" Version="4.0.25" />
     <PackageReference Include="InTheHand.Net.IrDA" Version="4.0.2" />
     <PackageReference Include="MaterialDesignThemes" Version="4.4.0-ci22-ci22" />
     <PackageReference Include="MvvmLight" Version="5.4.1.1" />

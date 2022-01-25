@@ -3,10 +3,6 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Plugin.BLE;
-using Plugin.BLE.Abstractions;
-using Plugin.BLE.Abstractions.Contracts;
-using Plugin.BLE.Abstractions.Exceptions;
 using System.Linq;
 using Laa.Shared;
 using Newtonsoft.Json;
@@ -141,14 +137,48 @@ namespace LaaSender.Views
 
         private void LeftButton_Clicked(object sender, EventArgs e)
         {
-            _service.Send(LaaConstants.Tapped1);
-            _service.Send(LaaConstants.Tapped2);
+            if (_service.IsConnected())
+            {
+                _service.Send(LaaConstants.Tapped1);
+                _service.Send(LaaConstants.Tapped2);
+            }
         }
 
         private void RightButton_Clicked(object sender, EventArgs e)
         {
-            _service.Send(LaaConstants.Tapped1);
-            _service.Send(LaaConstants.Tapped2);
+            if (_service.IsConnected())
+            {
+                _service.Send(LaaConstants.Tapped1);
+                _service.Send(LaaConstants.Tapped2);
+            }
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+        }
+
+        protected override async void OnAppearing()
+        {
+            //RefreshUI();
+            //await DisconnectIfConnectedAsync();
+
+            base.OnAppearing();
+        }
+
+        private async Task DisconnectIfConnectedAsync()
+        {
+            if (_service != null)
+            {
+                try
+                {
+                    _service.Disconnect();
+                }
+                catch (Exception exception)
+                {
+                    await DisplayAlert("Error", exception.Message, "Close");
+                }
+            }
         }
 
         protected override bool OnBackButtonPressed()

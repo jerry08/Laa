@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using InTheHand.Net.Sockets;
 using System.Linq;
 using InTheHand.Net.Bluetooth;
+using Laa.Shared;
 
 namespace LaaServer.Common.Services
 {
@@ -26,7 +27,7 @@ namespace LaaServer.Common.Services
         /// </summary>
         public ReceiverBluetoothService()
         {
-            _serviceClassId = new Guid("00001101-0000-1000-8000-00805f9b34fb");
+            _serviceClassId = new Guid(LaaConstants.UUID);
         }
 
         /// <summary>
@@ -95,6 +96,12 @@ namespace LaaServer.Common.Services
                         {
                             return;
                         }
+
+                        //using (var streamReader = new StreamReader(client.GetStream()))
+                        //{
+                        //    string content = streamReader.ReadLine();
+                        //    //break;
+                        //}
 
                         //using (var streamReader = new StreamReader(client.GetStream()))
                         using (var streamReader = new StreamReader(client.GetStream(), System.Text.Encoding.UTF8))

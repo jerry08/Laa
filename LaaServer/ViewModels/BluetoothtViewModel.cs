@@ -418,6 +418,11 @@ namespace LaaServer.ViewModels
 
         private async void Start()
         {
+            if (BluetoothService != null && BluetoothService.WasStarted)
+            {
+                return;
+            }
+
             if (BluetoothRadio.Default == null)
             {
                 IsOn = false;

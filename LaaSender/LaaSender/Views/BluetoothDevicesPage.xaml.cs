@@ -1,17 +1,20 @@
 ﻿using System;
 using Xamarin.Forms;
+using InTheHand.Net.Sockets;
 
 namespace LaaSender.Views
 {
     public partial class BluetoothDevicesPage : ContentPage
     {
-        IBluetoothService service;
+        IBluetoothRequestService BluetoothRequestService;
+        IBluetoothService BluetoothService;
 
         public BluetoothDevicesPage()
         {
             InitializeComponent();
 
-            service = DependencyService.Get<IBluetoothService>();
+            BluetoothService = new BluetoothService();
+            BluetoothRequestService = DependencyService.Get<IBluetoothRequestService>();
 
             DevicesList.Refreshing += (s, e) =>
             {
@@ -24,42 +27,39 @@ namespace LaaSender.Views
 
         async void Init()
         {
-            if (service.IsEnabled())
+            if (BluetoothRequestService.IsEnabled())
             {
-                DevicesList.ItemsSource = service.PairedDevices();
+                DevicesList.ItemsSource = BluetoothService.PairedDevices();
             }
             else
             {
                 bool res = await DisplayAlert("", "Your bluetooth will be turned on", "OK", "Cancel");
                 if (res)
                 {
-                    if (!service.IsEnabled())
-                    {
-                        EnableBluetooth();
-                    }
+                    EnableBluetooth();
                 }
             }
         }
 
-        private void searchDevice(object sender, EventArgs e)
+        private void SearchDevice(object sender, EventArgs e)
         {
-            if (!service.IsEnabled())
+            if (!BluetoothRequestService.IsEnabled())
             {
                 EnableBluetooth();
                 return;
             }
 
-            DevicesList.ItemsSource = service.PairedDevices();
+            DevicesList.ItemsSource = BluetoothService.PairedDevices();
         }
 
         async void EnableBluetooth()
         {
-            bool result = await service.Enable();
+            bool result = await BluetoothRequestService.Enable();
             if (result)
             {
                 App.Current.Dispatcher.BeginInvokeOnMainThread(() => 
                 {
-                    DevicesList.ItemsSource = service.PairedDevices();
+                    DevicesList.ItemsSource = BluetoothService.PairedDevices();
                 });
             }
         }
@@ -68,7 +68,7 @@ namespace LaaSender.Views
         {
             try
             {
-                service.Connect(DevicesList.SelectedItem?.ToString());
+                BluetoothService.Connect((BluetoothDeviceInfo)DevicesList.SelectedItem);
 
                 //if (!service.IsConnected())
                 //{
@@ -76,7 +76,7 @@ namespace LaaSender.Views
                 //    return;
                 //}
 
-                BluetoothPage page = new BluetoothPage(service);
+                BluetoothPage page = new BluetoothPage(BluetoothService);
                 await App.Current.MainPage.Navigation.PushAsync(new NavigationPage(page), false);
             }
             catch (Exception ex)

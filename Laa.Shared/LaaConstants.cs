@@ -14,5 +14,8 @@
 
         public const string Tapped1 = "-ebiu&4b";
         public const string Tapped2 = "-ebisvu&4b";
+
+        public const string UUID = "8e99f5f1-4a07-4268-9686-3a288326e0a2";
+        //public const string UUID = "00001101-0000-1000-8000-00805F9B34FB";
     }
 }
