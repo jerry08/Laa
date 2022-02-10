@@ -4,4 +4,4 @@ Laa is an open source project that allows a user to link their mobile device to 
 ## Client Download
 It is available for Windows and Android. iOS client is not ready yet!
 
-<a href=""><img src="https://github.com/vpnhood/VpnHood/wiki/images/download-google-play.png" width="200"></a><a href="https://github.com/jerry08/Laa/releases/latest/download/LaaServer.zip"><img src="https://github.com/vpnhood/VpnHood/wiki/images/download-win.png" width="200"></a>
+<a href="https://play.google.com/store/apps/details?id=com.berry.laa"><img src="https://github.com/jerry08/Laa/blob/master/images/download-google-play.png" width="200"></a><a href="https://github.com/jerry08/Laa/releases/latest/download/LaaServer.zip"><img src="https://github.com/jerry08/Laa/blob/master/images/download-win.png" width="200"></a>
