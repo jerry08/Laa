@@ -783,7 +783,7 @@ namespace LaaServer.ViewModels
         private async void Start()
         {
             IpAddress = NetworkHelper.GetAllLocalIPv4(NetworkInterfaceType.Wireless80211).FirstOrDefault();
-            this.OnPropertyChanged(null);
+            OnPropertyChanged(null);
 
             int port = LaaConstants.WifiPort;
 
@@ -812,7 +812,7 @@ namespace LaaServer.ViewModels
             if (string.IsNullOrEmpty(IpAddress))
             {
                 IsOn = false;
-                this.OnPropertyChanged(null);
+                OnPropertyChanged(null);
                 var dialog = _viewModelFactory.CreateMessageBoxViewModel("Error", "Connection not found");
                 await _dialogManager.ShowDialogAsync(dialog);
                 return;
@@ -826,7 +826,7 @@ namespace LaaServer.ViewModels
             catch (Exception e)
             {
                 IsOn = false;
-                this.OnPropertyChanged(null);
+                OnPropertyChanged(null);
                 var dialog = _viewModelFactory.CreateMessageBoxViewModel("Error", e.Message);
                 await _dialogManager.ShowDialogAsync(dialog);
             }
@@ -856,7 +856,7 @@ namespace LaaServer.ViewModels
             }
 
             IpAddress = "";
-            this.OnPropertyChanged(null);
+            OnPropertyChanged(null);
         }
     }
 }
