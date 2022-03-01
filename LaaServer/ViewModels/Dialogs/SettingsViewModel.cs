@@ -18,6 +18,12 @@ namespace LaaServer.ViewModels.Dialogs
             get => _settingsService.IsDarkModeEnabled;
             set => _settingsService.IsDarkModeEnabled = value;
         }
+        
+        public bool IsStartAppOnBootEnabled
+        {
+            get => _settingsService.IsStartAppOnBootEnabled;
+            set => _settingsService.IsStartAppOnBootEnabled = value;
+        }
 
         public SettingsViewModel(SettingsService settingsService)
         {

@@ -9,6 +9,8 @@ namespace LaaServer.Network
 {
     class EchoServer : UdpServer
     {
+        public event EventHandler<string> OnMessageReceived;
+
         public EchoServer(IPAddress address, int port) : base(address, port) { }
 
         protected override void OnStarted()
@@ -20,7 +22,7 @@ namespace LaaServer.Network
         protected override void OnReceived(EndPoint endpoint, byte[] buffer, long offset, long size)
         {
             string message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
-            WifiViewModel.MessageReceived(message);
+            OnMessageReceived?.Invoke(this, message);
             SendAsync(endpoint, buffer, 0, size);
             return;
 

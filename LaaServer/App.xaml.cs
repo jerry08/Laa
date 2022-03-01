@@ -3,6 +3,7 @@ using LaaServer.Utils;
 using LaaServer.ViewModels;
 using LaaServer.Views;
 using MaterialDesignThemes.Wpf;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -51,6 +52,34 @@ namespace LaaServer
             //AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
         }
 
+        public static void SetStartup(bool isChecked)
+        {
+            //RegistryKey rk = Registry.CurrentUser.OpenSubKey
+            //    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            //
+            //if (isChecked)
+            //    rk.SetValue(AppName, "\"" + Assembly.GetExecutingAssembly().Location + "\"");
+            //else
+            //    rk.DeleteValue(AppName, false);
+
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            {
+                if (isChecked)
+                {
+                    key.SetValue(
+                        AppName,
+                        //"\"" + Assembly.GetExecutingAssembly().Location + "\""
+                        //"\"" + Assembly.GetEntryAssembly().Location + "\""
+                        "\"" + Process.GetCurrentProcess().MainModule.FileName + "\"" + " -background"
+                    );
+                }
+                else
+                {
+                    key.DeleteValue(AppName, false);
+                }
+            }
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -71,6 +100,8 @@ namespace LaaServer
                 return;
             }
 
+            //MessageBox.Show(string.Join(Environment.NewLine, e.Args));
+
             Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
 
             IsExit = true;
@@ -86,8 +117,8 @@ namespace LaaServer
                 }
                 ProgramOpen.Set();
 
-                //MainWindow.Activate();
-                //MainWindow.WindowState = WindowState.Normal;
+                MainWindow.WindowState = WindowState.Normal;
+                MainWindow.Activate();
             };
 
             NavigationService = (MainWindow as RootView)._mainFrame.NavigationService;
@@ -100,6 +131,15 @@ namespace LaaServer
 
             CreateContextMenu();
             //ShowMainWindow();
+
+            string arg = e.Args.Length > 0 ? e.Args[0] : null;
+            if (arg == "-background")
+            {
+                IsExit = false;
+                MainWindow.Close();
+
+                (MainWindow.DataContext as RootViewModel).NavigateWifiPage(true);
+            }
         }
 
         private static Theme LightTheme { get; } = Theme.Create(

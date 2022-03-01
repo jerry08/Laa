@@ -121,11 +121,18 @@ namespace LaaServer.ViewModels
             });
         }
         
-        public void NavigateWifiPage()
+        public void NavigateWifiPage(bool autoStart = false)
         {
+            var viewModel = _viewModelFactory.CreateWifiViewModel();
+
+            if (autoStart)
+            {
+                viewModel.StartCommand.Execute(null);
+            }
+
             App.NavigationService.Navigate(new WifiPage()
             {
-                DataContext = _viewModelFactory.CreateWifiViewModel()
+                DataContext = viewModel
             });
         }
 

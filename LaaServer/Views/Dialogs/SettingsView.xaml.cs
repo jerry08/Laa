@@ -14,5 +14,11 @@ namespace LaaServer.Views.Dialogs
 
         private void DarkModeToggleButton_Unchecked(object sender, RoutedEventArgs args) =>
             App.SetLightTheme();
+
+        private void StartAppOnBootToggleButton_Checked(object sender, RoutedEventArgs e) =>
+            App.SetStartup(true);
+
+        private void StartAppOnBootToggleButton_Unchecked(object sender, RoutedEventArgs e) =>
+            App.SetStartup(false);
     }
 }

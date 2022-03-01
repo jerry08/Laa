@@ -8,6 +8,8 @@ namespace LaaServer.Services
         public bool IsAutoUpdateEnabled { get; set; } = true;
 
         public bool IsDarkModeEnabled { get; set; }
+        
+        public bool IsStartAppOnBootEnabled { get; set; }
 
         public SettingsService()
         {

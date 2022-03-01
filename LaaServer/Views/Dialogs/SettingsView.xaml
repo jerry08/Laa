@@ -38,6 +38,22 @@
                 DockPanel.Dock="Right"
                 IsChecked="{Binding IsAutoUpdateEnabled}" />
         </DockPanel>
+        
+        <!--  Start app on boot  -->
+        <DockPanel Background="Transparent" 
+                   LastChildFill="False"
+                   ToolTip="Start app on boot">
+            <TextBlock
+                Margin="16,8"
+                DockPanel.Dock="Left"
+                Text="Auto-startup" />
+            <ToggleButton
+                Margin="16,8"
+                DockPanel.Dock="Right"
+                Checked="StartAppOnBootToggleButton_Checked"
+                IsChecked="{Binding IsStartAppOnBootEnabled}"
+                Unchecked="StartAppOnBootToggleButton_Unchecked" />
+        </DockPanel>
 
         <!--  Dark mode  -->
         <DockPanel

@@ -29,7 +29,7 @@ namespace LaaServer.Network
         {
             string message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
 
-            WifiViewModel.MessageReceived(message);
+            //WifiViewModel.MessageReceived(message);
             return;
 
             Console.WriteLine("Incoming: " + message);

@@ -12,6 +12,7 @@
         Background="{DynamicResource MaterialDesignBackground}"
         WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" 
         Icon="/LaaServer;component/logo.ico"
+        WindowState="Minimized"
         Style="{DynamicResource MaterialDesignRoot}"
         Title="{Binding DisplayName}" Height="400" Width="500">
     <i:Interaction.Triggers>
