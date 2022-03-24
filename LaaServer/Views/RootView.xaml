@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LaaServer"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"           
+        xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors"         
         xmlns:viewModels="clr-namespace:LaaServer.ViewModels"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -15,11 +15,20 @@
         WindowState="Minimized"
         Style="{DynamicResource MaterialDesignRoot}"
         Title="{Binding DisplayName}" Height="400" Width="500">
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding OnViewLoadedCommand}" />
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+    <Behaviors:Interaction.Triggers>
+        <Behaviors:EventTrigger EventName="Closing">
+            <Behaviors:InvokeCommandAction Command="{Binding OnViewClosingCommand}" />
+        </Behaviors:EventTrigger>
+        <Behaviors:EventTrigger EventName="SizeChanged">
+            <Behaviors:InvokeCommandAction Command="{Binding OnViewSizeLocationChangedCommand}" />
+        </Behaviors:EventTrigger>
+        <Behaviors:EventTrigger EventName="LocationChanged">
+            <Behaviors:InvokeCommandAction Command="{Binding OnViewSizeLocationChangedCommand}" />
+        </Behaviors:EventTrigger>
+        <Behaviors:EventTrigger EventName="Loaded">
+            <Behaviors:InvokeCommandAction Command="{Binding OnViewLoadedCommand}" />
+        </Behaviors:EventTrigger>
+    </Behaviors:Interaction.Triggers>
     <materialDesign:DialogHost
         CloseOnClickAway="True"
         SnackbarMessageQueue="{Binding Notifications}"

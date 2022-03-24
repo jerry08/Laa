@@ -4,7 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:LaaServer.Views"
-      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"           
+      xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:viewModels="clr-namespace:LaaServer.ViewModels"
       mc:Ignorable="d" 
       Style="{DynamicResource MaterialDesignPageRoot}"
@@ -22,14 +22,14 @@
             </StackPanel>-->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
                 <ToggleButton IsChecked="{Binding IsOn}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Checked">
-                            <i:InvokeCommandAction Command="{Binding ToggledCommand}" />
-                        </i:EventTrigger>
-                        <i:EventTrigger EventName="Unchecked">
-                            <i:InvokeCommandAction Command="{Binding ToggledCommand}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                    <Behaviors:Interaction.Triggers>
+                        <Behaviors:EventTrigger EventName="Checked">
+                            <Behaviors:InvokeCommandAction Command="{Binding ToggledCommand}" />
+                        </Behaviors:EventTrigger>
+                        <Behaviors:EventTrigger EventName="Unchecked">
+                            <Behaviors:InvokeCommandAction Command="{Binding ToggledCommand}" />
+                        </Behaviors:EventTrigger>
+                    </Behaviors:Interaction.Triggers>
                 </ToggleButton>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
