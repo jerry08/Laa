@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using LaaServer.Views.Dialogs;
 using LaaServer.ViewModels.Framework;
+using System.IO;
 
 namespace LaaServer.ViewModels
 {
@@ -27,6 +28,9 @@ namespace LaaServer.ViewModels
         #region Commands
         private ICommand _onViewLoadedCommand;
         public ICommand OnViewLoadedCommand => _onViewLoadedCommand ??= new CommandHandler((s) => OnViewLoaded(), () => true);
+
+        private ICommand _onViewSizeLocationChangedCommand;
+        public ICommand OnViewSizeLocationChangedCommand => _onViewSizeLocationChangedCommand ??= new CommandHandler((s) => OnViewSizeLocationChanged(), () => true);
 
         private ICommand _bthButtonCommand;
         public ICommand BthButtonCommand => _bthButtonCommand ??= new CommandHandler((s) => NavigateBtnPage(), () => true);
@@ -52,7 +56,7 @@ namespace LaaServer.ViewModels
             _updateService = updateService;
 
             // Title
-            DisplayName = $"{App.Name} v{App.VersionString}";
+            DisplayName = $"{App.DisplayName} v{App.VersionString}";
 
             //App.Current.MainWindow.Closing += delegate { OnClose(); };
         }
@@ -97,6 +101,55 @@ namespace LaaServer.ViewModels
             _updateService.FinalizeUpdate(false);
         }
 
+        public void OnViewSizeLocationChanged()
+        {
+            _settingsService.MainWindowHeight = Application.Current.MainWindow.Height;
+            _settingsService.MainWindowWidth = Application.Current.MainWindow.Width;
+            _settingsService.MainWindowTop = Application.Current.MainWindow.Top;
+            _settingsService.MainWindowLeft = Application.Current.MainWindow.Left;
+            _settingsService.MainWindowState = Application.Current.MainWindow.WindowState;
+        }
+
+        public void SizeToFit()
+        {
+            if (_settingsService.MainWindowHeight > SystemParameters.VirtualScreenHeight)
+            {
+                _settingsService.MainWindowHeight = SystemParameters.VirtualScreenHeight;
+            }
+
+            if (_settingsService.MainWindowWidth > SystemParameters.VirtualScreenWidth)
+            {
+                _settingsService.MainWindowWidth = SystemParameters.VirtualScreenWidth;
+            }
+        }
+
+        public void MoveIntoView()
+        {
+            if (_settingsService.MainWindowTop + _settingsService.MainWindowWidth / 2 >
+                SystemParameters.VirtualScreenHeight)
+            {
+                _settingsService.MainWindowTop = SystemParameters.VirtualScreenHeight -
+                    _settingsService.MainWindowHeight;
+            }
+
+            if (_settingsService.MainWindowLeft + _settingsService.MainWindowWidth / 2 >
+                     SystemParameters.VirtualScreenWidth)
+            {
+                _settingsService.MainWindowLeft = SystemParameters.VirtualScreenWidth -
+                    _settingsService.MainWindowWidth;
+            }
+
+            if (_settingsService.MainWindowTop < 0)
+            {
+                _settingsService.MainWindowTop = 0;
+            }
+
+            if (_settingsService.MainWindowLeft < 0)
+            {
+                _settingsService.MainWindowLeft = 0;
+            }
+        }
+
         public async void OnViewLoaded()
         {
             _settingsService.Load();
@@ -110,7 +163,38 @@ namespace LaaServer.ViewModels
                 App.SetLightTheme();
             }
 
+            if (File.Exists(_settingsService.FullFilePath))
+            {
+                SizeToFit();
+                MoveIntoView();
+
+                if (!_settingsService.IsSaved)
+                {
+                    _settingsService.Save();
+                }
+
+                Application.Current.MainWindow.Height = _settingsService.MainWindowHeight;
+                Application.Current.MainWindow.Width = _settingsService.MainWindowWidth;
+                Application.Current.MainWindow.Top = _settingsService.MainWindowTop;
+                Application.Current.MainWindow.Left = _settingsService.MainWindowLeft;
+                Application.Current.MainWindow.WindowState = _settingsService.MainWindowState;
+            }
+            else
+            {
+                CenterWindowOnScreen();
+            }
+
             await CheckForUpdatesAsync();
+        }
+
+        private void CenterWindowOnScreen()
+        {
+            double screenWidth = SystemParameters.PrimaryScreenWidth;
+            double screenHeight = SystemParameters.PrimaryScreenHeight;
+            double windowWidth = Application.Current.MainWindow.Width;
+            double windowHeight = Application.Current.MainWindow.Height;
+            Application.Current.MainWindow.Left = (screenWidth / 2) - (windowWidth / 2);
+            Application.Current.MainWindow.Top = (screenHeight / 2) - (windowHeight / 2);
         }
 
         public void NavigateBtnPage()
@@ -127,7 +211,7 @@ namespace LaaServer.ViewModels
 
             if (autoStart)
             {
-                viewModel.StartCommand.Execute(null);
+                viewModel.StartCommand.Execute(autoStart);
             }
 
             App.NavigationService.Navigate(new WifiPage()
