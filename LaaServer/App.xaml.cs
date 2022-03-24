@@ -31,6 +31,8 @@ namespace LaaServer
 
         public static string Name { get; } = Assembly.GetName().Name!;
 
+        public static string DisplayName { get; } = "Laa Server";
+
         public static Version Version { get; } = Assembly.GetName().Version!;
 
         public static string VersionString { get; } = Version.ToString(3);
@@ -113,7 +115,7 @@ namespace LaaServer
                 if (ProgramOpen.WaitOne(0))
                 {
                     FocusProgram.Set();
-                    Application.Current.Shutdown();
+                    Current.Shutdown();
                 }
                 ProgramOpen.Set();
 
