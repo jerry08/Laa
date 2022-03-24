@@ -46,7 +46,7 @@ namespace LaaServer.ViewModels
         public ICommand ToggledCommand => _toggledCommand ??= new CommandHandler((s) => Toggled(), () => true);
 
         private ICommand _startCommand;
-        public ICommand StartCommand => _startCommand ??= new CommandHandler((s) => Start(), () => CanStart);
+        public ICommand StartCommand => _startCommand ??= new CommandHandler((s) => Start(s), () => CanStart);
 
         public bool CanStart => !IsRunning;
 
@@ -78,7 +78,7 @@ namespace LaaServer.ViewModels
 
             if (IsOn)
             {
-                Start();
+                Start(null);
             }
             else
             {
@@ -103,8 +103,15 @@ namespace LaaServer.ViewModels
             App.Current.MainWindow.Close();
         }
 
-        private async void Start()
+        private async void Start(object parameter)
         {
+            bool autoStart = false;
+
+            if (parameter is true)
+            {
+                autoStart = true;
+            }
+
             IpAddress = NetworkHelper.GetAllLocalIPv4(NetworkInterfaceType.Wireless80211).FirstOrDefault();
             OnPropertyChanged(null);
 
@@ -112,6 +119,11 @@ namespace LaaServer.ViewModels
 
             if (!FirewallHelper.IsPortOpen(port))
             {
+                if (autoStart)
+                {
+                    return;
+                }
+
                 if (App.IsAdministrator())
                 {
                     FirewallHelper.AddOutboundRule();
@@ -146,6 +158,8 @@ namespace LaaServer.ViewModels
                 Server = new EchoServer(IPAddress.Parse(IpAddress), port);
                 Server.OnMessageReceived += Server_OnMessageReceived;
                 Server.Start();
+
+                IsOn = true;
             }
             catch (Exception e)
             {
