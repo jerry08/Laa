@@ -154,6 +154,13 @@ namespace LaaServer.ViewModels
         {
             _settingsService.Load();
 
+            RestoreWindow();
+
+            await CheckForUpdatesAsync();
+        }
+
+        public void RestoreWindow()
+        {
             if (_settingsService.IsDarkModeEnabled)
             {
                 App.SetDarkTheme();
@@ -183,8 +190,6 @@ namespace LaaServer.ViewModels
             {
                 CenterWindowOnScreen();
             }
-
-            await CheckForUpdatesAsync();
         }
 
         private void CenterWindowOnScreen()

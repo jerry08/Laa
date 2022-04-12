@@ -139,8 +139,8 @@ namespace LaaSender.Views
         {
             if (_service.IsConnected())
             {
-                _service.Send(LaaConstants.Tapped1);
-                _service.Send(LaaConstants.Tapped2);
+                _service.Send(LaaConstants.LeftClicked1);
+                _service.Send(LaaConstants.LeftClicked2);
             }
         }
 
@@ -148,8 +148,8 @@ namespace LaaSender.Views
         {
             if (_service.IsConnected())
             {
-                _service.Send(LaaConstants.Tapped1);
-                _service.Send(LaaConstants.Tapped2);
+                _service.Send(LaaConstants.RightClicked1);
+                _service.Send(LaaConstants.RightClicked2);
             }
         }
 

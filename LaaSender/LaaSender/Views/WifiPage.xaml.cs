@@ -232,14 +232,14 @@ namespace LaaSender.Views
 
         private void LeftButton_Clicked(object sender, EventArgs e)
         {
-            Client?.Send(LaaConstants.Tapped1);
-            Client?.Send(LaaConstants.Tapped2);
+            Client?.Send(LaaConstants.LeftClicked1);
+            Client?.Send(LaaConstants.LeftClicked2);
         }
 
         private void RightButton_Clicked(object sender, EventArgs e)
         {
-            Client?.Send(LaaConstants.Tapped1);
-            Client?.Send(LaaConstants.Tapped2);
+            Client?.Send(LaaConstants.RightClicked1);
+            Client?.Send(LaaConstants.RightClicked2);
         }
     }
 }

@@ -695,8 +695,10 @@ namespace LaaServer.ViewModels
             }
 
             if (message.EndsWith(LaaConstants.MouseLocationHash) &&
-                !message.Contains(LaaConstants.Tapped1) &&
-                !message.Contains(LaaConstants.Tapped2))
+                !message.Contains(LaaConstants.RightClicked1) &&
+                !message.Contains(LaaConstants.RightClicked2) &&
+                !message.Contains(LaaConstants.LeftClicked1) &&
+                !message.Contains(LaaConstants.LeftClicked2))
             {
                 string val = "[" + message.Replace(LaaConstants.MouseLocationHash, "")
                     .Replace("}{", "},{") + "]";
@@ -716,18 +718,26 @@ namespace LaaServer.ViewModels
                 LaaConstants.FirstHash,
                 LaaConstants.SecondHash,
                 LaaConstants.FirstBkHash,
-                LaaConstants.SecondBkHash
+                LaaConstants.SecondBkHash,
+                LaaConstants.RightClicked1,
+                LaaConstants.RightClicked2,
+                LaaConstants.LeftClicked1,
+                LaaConstants.LeftClicked2
             };
 
             //string[] messages = message.Split(splitArr, StringSplitOptions.None);
             //string[] messages = Regex.Split(message, LaaConstants.FirstHash);
-            string[] messages = Regex.Split(message, $@"({LaaConstants.FirstHash}|{LaaConstants.SecondHash}|{LaaConstants.FirstBkHash}|{LaaConstants.SecondBkHash}|{LaaConstants.Tapped1}|{LaaConstants.Tapped2})");
+            //string[] messages = Regex.Split(message, $@"({LaaConstants.FirstHash}|{LaaConstants.SecondHash}|{LaaConstants.FirstBkHash}|{LaaConstants.SecondBkHash}|{LaaConstants.RightClicked1}|{LaaConstants.RightClicked2}}|{LaaConstants.LeftClicked1}}|{LaaConstants.LeftClicked2})");
+            string[] messages = Regex.Split(message, $@"({string.Join('|', splitArr)})");
 
             messages = messages.Where(x => !string.IsNullOrEmpty(x)).ToArray();
 
             for (int i = 0; i < messages.Length; i++)
             {
-                if (messages[i] == LaaConstants.Tapped1 || messages[i] == LaaConstants.Tapped2)
+                if (messages[i] == LaaConstants.RightClicked1
+                    || messages[i] == LaaConstants.RightClicked2
+                    || messages[i] == LaaConstants.LeftClicked1
+                    || messages[i] == LaaConstants.LeftClicked2)
                 {
                     PerformAction(messages[i]);
                     continue;
@@ -750,16 +760,30 @@ namespace LaaServer.ViewModels
                 return;
             }
 
-            if (message.Contains(LaaConstants.Tapped2))
+            if (message.Contains(LaaConstants.LeftClicked2))
             {
-                if (prevTapMessage.Contains(LaaConstants.Tapped1))
+                if (prevTapMessage.Contains(LaaConstants.LeftClicked1))
                 {
                     prevTapMessage = message;
                     return;
                 }
             }
 
-            if (message.Contains(LaaConstants.Tapped2) || message.Contains(LaaConstants.Tapped1))
+            if (message.Contains(LaaConstants.LeftClicked2) || message.Contains(LaaConstants.LeftClicked1))
+            {
+                prevTapMessage = message;
+            }
+
+            if (message.Contains(LaaConstants.RightClicked2))
+            {
+                if (prevTapMessage.Contains(LaaConstants.RightClicked1))
+                {
+                    prevTapMessage = message;
+                    return;
+                }
+            }
+
+            if (message.Contains(LaaConstants.RightClicked2) || message.Contains(LaaConstants.RightClicked1))
             {
                 prevTapMessage = message;
             }
@@ -803,9 +827,13 @@ namespace LaaServer.ViewModels
 
                 simulator.Keyboard.KeyPress(VirtualKeyCode.BACK);
             }
-            else if (message.Contains(LaaConstants.Tapped2) || message.Contains(LaaConstants.Tapped1))
+            else if (message.Contains(LaaConstants.LeftClicked1) || message.Contains(LaaConstants.LeftClicked2))
             {
                 simulator.Mouse.LeftButtonClick();
+            }
+            else if (message.Contains(LaaConstants.RightClicked1) || message.Contains(LaaConstants.RightClicked2))
+            {
+                simulator.Mouse.RightButtonClick();
             }
             else
             {
